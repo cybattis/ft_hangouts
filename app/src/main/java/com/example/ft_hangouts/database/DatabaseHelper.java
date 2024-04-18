@@ -18,13 +18,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String PHONE_NUMBER = "phone_number";
 
     // Database Information
-    static final String DB_NAME = "FT_HANGOUTS_CONTACTS.DB";
+    static final String DB_NAME = "ft_hangouts_contacts.db";
+
+    private Context context;
 
     // database version
     static final int DB_VERSION = 1;
 
     // Creating table query
-    private static final String CREATE_TABLE = "create table " + TABLE_NAME + "("
+    private static final String CREATE_TABLE =
+            "CREATE TABLE " + TABLE_NAME + "("
             + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + FIRST_NAME + " TEXT, "
             + LAST_NAME + " TEXT, "
@@ -32,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+        this.context = context;
     }
 
     @Override

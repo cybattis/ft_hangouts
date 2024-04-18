@@ -16,9 +16,6 @@
         android:name="com.example.ft_hangouts.ui.contacts.ContactsFragment"
         android:label="@string/title_contacts"
         tools:layout="@layout/fragment_contacts" >
-        <action
-            android:id="@+id/action_navigation_contacts_to_navigation_new_contact"
-            app:destination="@id/navigation_new_contact" />
     </fragment>
 
     <fragment
@@ -27,14 +24,10 @@
         android:label="@string/title_messages"
         tools:layout="@layout/fragment_messages" />
 
-    <fragment
-            android:id="@+id/navigation_new_contact"
-            android:name="com.example.ft_hangouts.ui.newContact.NewContactFragment"
-            android:label="@string/title_add_contact"
-            tools:layout="@layout/fragment_new_contact" >
-        <action
-                android:id="@+id/action_navigation_new_contact_to_navigation_contacts"
-                app:destination="@id/navigation_contacts" />
-    </fragment>
+    <activity
+            android:id="@+id/addContactActivity"
+            android:name="com.example.ft_hangouts.ui.newContact.AddContactActivity"
+            android:label="activity_add_contact"
+            tools:layout="@layout/activity_add_contact" />
 
 </navigation>

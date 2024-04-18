@@ -6,34 +6,26 @@
         android:layout_height="match_parent"
         tools:context=".ui.contacts.ContactsFragment" >
 
-    <ImageButton
-        android:id="@+id/add_contact_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/add_contact_button_text"
-        android:src="@android:drawable/ic_input_add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ListView
-        android:id="@+id/contacts_list"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_contact_button" />
-
-    <TextView
-            android:text="@string/empty_contact_list"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:src="@drawable/ic_input_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:id="@+id/empty_list_text"
-            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:id="@+id/add_contact_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:contentDescription="@string/add_contact_button_description" />
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="409dp"
+            android:layout_height="729dp"
+            android:id="@+id/contact_list"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,4 +13,6 @@
     <string name="text_phone_number">Phone number</string>
 
     <string name="text_save">Save</string>
+    <string name="add_contact_button_description">Add contact</string>
+    <string name="title_activity_add_contact">AddContactActivity</string>
 </resources>
