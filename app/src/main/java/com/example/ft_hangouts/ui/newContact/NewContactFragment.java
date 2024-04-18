@@ -6,11 +6,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavHostController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
+import com.example.ft_hangouts.R;
 import com.example.ft_hangouts.databinding.FragmentNewContactBinding;
+import com.example.ft_hangouts.ui.contacts.ContactsFragment;
+
+import java.util.Objects;
 
 public class NewContactFragment extends Fragment {
 
@@ -22,16 +35,13 @@ public class NewContactFragment extends Fragment {
                 new ViewModelProvider(this).get(NewContactViewModel.class);
 
         binding = FragmentNewContactBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
 
-        final TextView textView = binding.textView;
-        newContactViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return root;
+        return binding.getRoot();
     }
 
-//    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//    }
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
 
     @Override
     public void onDestroyView() {

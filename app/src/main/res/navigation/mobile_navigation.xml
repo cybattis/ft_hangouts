@@ -17,8 +17,8 @@
         android:label="@string/title_contacts"
         tools:layout="@layout/fragment_contacts" >
         <action
-                android:id="@+id/action_navigation_contacts_to_navigation_new_contact"
-                app:destination="@id/navigation_new_contact" />
+            android:id="@+id/action_navigation_contacts_to_navigation_new_contact"
+            app:destination="@id/navigation_new_contact" />
     </fragment>
 
     <fragment
