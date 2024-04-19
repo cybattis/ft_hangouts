@@ -6,13 +6,16 @@
 
     <string name="title_add_contact">Add contact</string>
     <string name="empty_contact_list">No contacts found !</string>
-    <string name="add_contact_button_text">add contact</string>
+    <string name="add_contact_button_description">Add contact</string>
 
     <string name="text_first_name">First name</string>
     <string name="text_last_name">Last name</string>
     <string name="text_phone_number">Phone number</string>
+    <string name="text_add_contact">Add contact</string>
+    <string name="text_edit_contact">Edit contact</string>
+    <string name="text_delete_contact">Delete contact</string>
+    <string name="text_call_contact">Call contact</string>
+    <string name="text_send_message">Send message</string>
+    <string name="text_add">Add</string>
 
-    <string name="text_save">Save</string>
-    <string name="add_contact_button_description">Add contact</string>
-    <string name="title_activity_add_contact">AddContactActivity</string>
 </resources>

@@ -15,7 +15,7 @@
         <activity
                 android:name=".ui.newContact.AddContactActivity"
                 android:exported="false"
-                android:label="@string/title_activity_add_contact"
+                android:label="@string/title_add_contact"
                 android:theme="@style/Theme.Ft_hangouts" />
         <activity
                 android:name=".MainActivity"

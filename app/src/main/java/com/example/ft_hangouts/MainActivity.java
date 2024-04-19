@@ -21,9 +21,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
 
-    RecyclerView contacts_list;
-    FloatingActionButton add_contact_button;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +41,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
-        contacts_list = findViewById(R.id.contact_list);
-        add_contact_button = findViewById(R.id.add_contact_button);
-        add_contact_button.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AddContactActivity.class);
-            startActivity(intent);
-        });
     }
 
     @Override
