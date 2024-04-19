@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
 
-    Context context;
-    ArrayList<String> contact_id, contact_first_name, contact_last_name, contact_phone_number;
+    private Context context;
+    private ArrayList<String> contact_id, contact_first_name, contact_last_name, contact_phone_number;
 
     CustomAdapter(Context context, ArrayList<String> contact_id, ArrayList<String> contact_first_name, ArrayList<String> contact_last_name, ArrayList<String> contact_phone_number) {
         this.context = context;
@@ -36,7 +36,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.contact_id_txt.setText(contact_id.get(position));
+        System.out.println("onBindView: " + contact_id.get(position));
+        holder.contact_id_txt.setText(String.valueOf(contact_id.get(position)));
         holder.contact_name_txt.setText(String.format("%s %s", contact_first_name.get(position), contact_last_name.get(position)));
     }
 
@@ -45,8 +46,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         return contact_id.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView contact_id_txt, contact_name_txt;
 
         public MyViewHolder(@NonNull View itemView) {

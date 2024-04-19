@@ -26,7 +26,7 @@
 
     <activity
             android:id="@+id/addContactActivity"
-            android:name="com.example.ft_hangouts.ui.newContact.AddContactActivity"
+            android:name="com.example.ft_hangouts.ui.addContact.AddContactActivity"
             android:label="activity_add_contact"
             tools:layout="@layout/activity_add_contact" />
 

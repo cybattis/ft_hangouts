@@ -1,13 +1,9 @@
-package com.example.ft_hangouts.ui.newContact;
+package com.example.ft_hangouts.ui.addContact;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -15,7 +11,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.ft_hangouts.R;
 import com.example.ft_hangouts.database.DatabaseHelper;
 import com.example.ft_hangouts.databinding.ActivityAddContactBinding;
-import com.example.ft_hangouts.databinding.ActivityMainBinding;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Objects;
@@ -53,6 +48,7 @@ public class AddContactActivity extends AppCompatActivity {
             db.addContact(firstNameEditText.getText().toString().trim(),
                           lastNameEditText.getText().toString().trim(),
                           phoneNumberEditText.getText().toString().trim());
+            finish();
         });
     }
 

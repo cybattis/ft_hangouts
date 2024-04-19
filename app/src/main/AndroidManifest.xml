@@ -13,7 +13,7 @@
             android:theme="@style/Theme.Ft_hangouts"
             tools:targetApi="31">
         <activity
-                android:name=".ui.newContact.AddContactActivity"
+                android:name=".ui.addContact.AddContactActivity"
                 android:exported="false"
                 android:label="@string/title_add_contact"
                 android:theme="@style/Theme.Ft_hangouts" />
