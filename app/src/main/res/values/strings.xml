@@ -17,5 +17,10 @@
     <string name="text_call_contact">Call contact</string>
     <string name="text_send_message">Send message</string>
     <string name="text_add">Add</string>
+    <string name="text_address">Address</string>
+    <string name="text_zip_code">Zip Code</string>
+    <string name="text_city">City</string>
+    <string name="text_email">Email</string>
+    <string name="text_contact_picture_description">Contact picture</string>
 
 </resources>

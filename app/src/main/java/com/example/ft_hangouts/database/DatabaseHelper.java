@@ -19,6 +19,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String FIRST_NAME = "first_name";
     private static final String LAST_NAME = "last_name";
     private static final String PHONE_NUMBER = "phone_number";
+    private static final String ADDRESS = "address";
+    private static final String CITY = "city";
+    private static final String POSTAL_CODE = "postal_code";
+    private static final String EMAIL = "email";
+    private static final String IMAGE_URI = "image_uri";
 
     // Database Information
     static final String DB_NAME = "ft_hangouts_contacts.db";
@@ -35,7 +40,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + FIRST_NAME + " TEXT, "
             + LAST_NAME + " TEXT, "
-            + PHONE_NUMBER + " PHONE_NUMBER);";
+            + PHONE_NUMBER + " PHONE_NUMBER, "
+            + ADDRESS + " TEXT, "
+            + CITY + " TEXT, "
+            + POSTAL_CODE + " TEXT, "
+            + EMAIL + " TEXT, "
+            + IMAGE_URI + " TEXT);";
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -57,7 +67,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         database.close();
     }
 
-    public void addContact(@Nullable String firstName, @Nullable String lastName, @Nullable String phoneNumber) {
+    public void addContact(@Nullable String firstName,
+                           @Nullable String lastName,
+                           @Nullable String phoneNumber,
+                           @Nullable String address,
+                           @Nullable String city,
+                           @Nullable String postalCode,
+                           @Nullable String email,
+                           @Nullable String imageUri)
+    {
         database = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(FIRST_NAME, firstName);
