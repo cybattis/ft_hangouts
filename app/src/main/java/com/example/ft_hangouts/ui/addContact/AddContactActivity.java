@@ -27,7 +27,7 @@ public class AddContactActivity extends AppCompatActivity {
     TextInputEditText cityEditText;
     TextInputEditText postalCodeEditText;
     TextInputEditText emailEditText;
-    ImageButton contactImage;
+    ImageButton contactImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +52,41 @@ public class AddContactActivity extends AppCompatActivity {
         cityEditText = binding.inputCityText;
         postalCodeEditText = binding.inputPostalCodeText;
         emailEditText = binding.inputEmailText;
-        contactImage = binding.contactImage;
-
+        contactImageUri = binding.contactImage;
 
         binding.addButtonDb.setOnClickListener(v -> {
-            DatabaseHelper db = new DatabaseHelper(AddContactActivity.this);
-            db.addContact(firstNameEditText.getText().toString().trim(),
-                          lastNameEditText.getText().toString().trim(),
-                          phoneNumberEditText.getText().toString().trim(),
-                          addressEditText.getText().toString().trim(),
-                          cityEditText.getText().toString().trim(),
-                          postalCodeEditText.getText().toString().trim(),
-                          emailEditText.getText().toString().trim(),
-                          contactImage.getTag().toString());
-            finish();
+            try {
+                DatabaseHelper db = new DatabaseHelper(AddContactActivity.this);
+
+                String firstName = firstNameEditText.getText() != null ?
+                        firstNameEditText.getText().toString().trim() : "";
+                String lastName = lastNameEditText.getText() != null ?
+                        lastNameEditText.getText().toString().trim() : "";
+                String phoneNumber = phoneNumberEditText.getText() != null ?
+                        phoneNumberEditText.getText().toString() : "";
+                String address = addressEditText.getText() != null ?
+                        addressEditText.getText().toString().trim() : "";
+                String city = cityEditText.getText() != null ?
+                        cityEditText.getText().toString().trim() : "";
+                String postalCode = postalCodeEditText.getText() != null ?
+                        postalCodeEditText.getText().toString().trim() : "";
+                String email = emailEditText.getText() != null ?
+                        emailEditText.getText().toString().trim() : "";
+                String contactImage = contactImageUri.getTag() != null ?
+                        contactImageUri.getTag().toString() : "";
+
+                if (!getIntent().hasExtra("id"))
+                    db.addContact(firstName, lastName, phoneNumber, address, city, postalCode, email, contactImage);
+                else
+                    db.update(Long.parseLong(Objects.requireNonNull(getIntent().getStringExtra("id"))),
+                            firstName, lastName, phoneNumber, address, city, postalCode, email, contactImage);
+                finish();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
+
+        setUpdateActivity();
     }
 
     @Override
@@ -76,5 +96,38 @@ public class AddContactActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    void setUpdateActivity() {
+        if (!getIntent().hasExtra("id"))
+            return;
+
+        setTitle(getResources().getString(R.string.title_update_contact));
+        binding.addButtonDb.setText(getResources().getString(R.string.update_button));
+
+        if (getIntent().hasExtra("first_name")) {
+            firstNameEditText.setText(getIntent().getStringExtra("first_name"));
+        }
+        if (getIntent().hasExtra("last_name")) {
+            lastNameEditText.setText(getIntent().getStringExtra("last_name"));
+        }
+        if (getIntent().hasExtra("phone_number")) {
+            phoneNumberEditText.setText(getIntent().getStringExtra("phone_number"));
+        }
+        if (getIntent().hasExtra("address")) {
+            addressEditText.setText(getIntent().getStringExtra("address"));
+        }
+        if (getIntent().hasExtra("city")) {
+            cityEditText.setText(getIntent().getStringExtra("city"));
+        }
+        if (getIntent().hasExtra("postal_code")) {
+            postalCodeEditText.setText(getIntent().getStringExtra("postal_code"));
+        }
+        if (getIntent().hasExtra("email")) {
+            emailEditText.setText(getIntent().getStringExtra("email"));
+        }
+        if (getIntent().hasExtra("image_uri")) {
+            contactImageUri.setTag(getIntent().getStringExtra("image_uri"));
+        }
     }
 }

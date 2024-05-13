@@ -40,7 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + FIRST_NAME + " TEXT, "
             + LAST_NAME + " TEXT, "
-            + PHONE_NUMBER + " PHONE_NUMBER, "
+            + PHONE_NUMBER + " VARCHAR(32), "
             + ADDRESS + " TEXT, "
             + CITY + " TEXT, "
             + POSTAL_CODE + " TEXT, "
@@ -81,6 +81,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(FIRST_NAME, firstName);
         cv.put(LAST_NAME, lastName);
         cv.put(PHONE_NUMBER, phoneNumber);
+        cv.put(ADDRESS, address);
+        cv.put(CITY, city);
+        cv.put(POSTAL_CODE, postalCode);
+        cv.put(EMAIL, email);
+        cv.put(IMAGE_URI, imageUri);
         long result = database.insert(TABLE_NAME, null, cv);
         if (result == -1) {
             Toast.makeText(context, "Fail to add contact", Toast.LENGTH_SHORT).show();
@@ -94,7 +99,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 DatabaseHelper._ID,
                 DatabaseHelper.FIRST_NAME,
                 DatabaseHelper.LAST_NAME,
-                DatabaseHelper.PHONE_NUMBER
+                DatabaseHelper.PHONE_NUMBER,
+                DatabaseHelper.ADDRESS,
+                DatabaseHelper.CITY,
+                DatabaseHelper.POSTAL_CODE,
+                DatabaseHelper.EMAIL,
+                DatabaseHelper.IMAGE_URI
         };
         database = this.getReadableDatabase();
         Cursor cursor = database.query(DatabaseHelper.TABLE_NAME, columns, null, null, null, null, null);
@@ -104,12 +114,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public int update(long _id, String firstName, String lastName, String phoneNumber) {
+    public int update(long _id,
+                      String firstName,
+                      String lastName,
+                      String phoneNumber,
+                      String address,
+                      String city,
+                      String postalCode,
+                      String email,
+                      String imageUri)
+    {
         database = this.getWritableDatabase();
+
+        System.out.println("Phone number: " + phoneNumber);
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.FIRST_NAME, firstName);
         contentValues.put(DatabaseHelper.LAST_NAME, lastName);
         contentValues.put(DatabaseHelper.PHONE_NUMBER, phoneNumber);
+        contentValues.put(DatabaseHelper.ADDRESS, address);
+        contentValues.put(DatabaseHelper.CITY, city);
+        contentValues.put(DatabaseHelper.POSTAL_CODE, postalCode);
+        contentValues.put(DatabaseHelper.EMAIL, email);
+        contentValues.put(DatabaseHelper.IMAGE_URI, imageUri);
         return database.update(DatabaseHelper.TABLE_NAME, contentValues, DatabaseHelper._ID + " = " + _id, null);
     }
 

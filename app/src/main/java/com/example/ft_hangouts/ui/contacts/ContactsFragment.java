@@ -24,7 +24,7 @@ public class ContactsFragment extends Fragment {
 
     FragmentContactsBinding binding;
     DatabaseHelper db;
-    ArrayList<String> contact_id, contact_first_name, contact_last_name, contact_phone_number;
+    ContactsData contactsData;
     CustomAdapter customAdapter;
     RecyclerView contactList;
 
@@ -50,14 +50,11 @@ public class ContactsFragment extends Fragment {
     }
 
     private void createContactList() {
-        contact_id = new ArrayList<>();
-        contact_first_name = new ArrayList<>();
-        contact_last_name = new ArrayList<>();
-        contact_phone_number = new ArrayList<>();
+        contactsData = new ContactsData();
 
         StoreDataInArrays();
 
-        customAdapter = new CustomAdapter(getContext(), contact_id, contact_first_name, contact_last_name, contact_phone_number);
+        customAdapter = new CustomAdapter(getContext(), contactsData);
         binding.contactList.setAdapter(customAdapter);
         binding.contactList.setLayoutManager(new LinearLayoutManager(ContactsFragment.this.getContext()));
     }
@@ -89,10 +86,7 @@ public class ContactsFragment extends Fragment {
             Toast.makeText(getContext(), "No contact", Toast.LENGTH_SHORT).show();
         } else {
             do {
-                contact_id.add(cursor.getString(0));
-                contact_first_name.add(cursor.getString(1));
-                contact_last_name.add(cursor.getString(2));
-                contact_phone_number.add(cursor.getString(3));
+                contactsData.addContact(cursor);
             } while (cursor.moveToNext());
         }
     }

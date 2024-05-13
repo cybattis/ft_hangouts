@@ -8,6 +8,9 @@
     <string name="empty_contact_list">No contacts found !</string>
     <string name="add_contact_button_description">Add contact</string>
 
+    <string name="title_update_contact">Update contact</string>
+    <string name="update_button">Update</string>
+
     <string name="text_first_name">First name</string>
     <string name="text_last_name">Last name</string>
     <string name="text_phone_number">Phone number</string>
