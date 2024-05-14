@@ -7,6 +7,9 @@
         android:required="false" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
+    <!-- Devices running Android 12L (API level 32) or lower  -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+
     <application
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,6 +20,19 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.Ft_hangouts"
             tools:targetApi="31">
+
+        <!-- Trigger Google Play services to install the backported photo picker module. -->
+        <service
+            android:name="com.google.android.gms.metadata.ModuleDependencies"
+            android:enabled="false"
+            android:exported="false"
+            tools:ignore="MissingClass">
+            <intent-filter>
+                <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
+            </intent-filter>
+            <meta-data android:name="photopicker_activity:0:required" android:value="" />
+        </service>
+
         <activity
                 android:name=".ui.addContact.AddContactActivity"
                 android:exported="false"

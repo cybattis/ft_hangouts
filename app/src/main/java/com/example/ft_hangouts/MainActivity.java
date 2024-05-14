@@ -1,5 +1,6 @@
 package com.example.ft_hangouts;
 
+import android.content.ContentResolver;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;

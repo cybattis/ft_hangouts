@@ -1,10 +1,23 @@
 package com.example.ft_hangouts.ui.addContact;
 
+import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContentResolverCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -14,11 +27,21 @@ import com.example.ft_hangouts.database.DatabaseHelper;
 import com.example.ft_hangouts.databinding.ActivityAddContactBinding;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.UUID;
 
 public class AddContactActivity extends AppCompatActivity {
 
-    ActivityAddContactBinding binding;
+    private ActivityAddContactBinding binding;
 
     TextInputEditText firstNameEditText;
     TextInputEditText lastNameEditText;
@@ -27,11 +50,27 @@ public class AddContactActivity extends AppCompatActivity {
     TextInputEditText cityEditText;
     TextInputEditText postalCodeEditText;
     TextInputEditText emailEditText;
-    ImageButton contactImageUri;
+    ImageButton contactImageButton;
+
+    Bitmap imageFile;
+
+    // Registers a photo picker activity launcher in single-select mode.
+    private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
+                // Callback is invoked after the user selects a media item or closes the photo picker.
+                if (uri != null) {
+                    Log.d("PhotoPicker", "Selected URI: " + uri);
+                    contactImageButton.setImageURI(uri);
+                    imageFile = uriToBitmap(uri);
+                } else {
+                    Log.d("PhotoPicker", "No media selected");
+                }
+            });
 
         binding = ActivityAddContactBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -52,10 +91,11 @@ public class AddContactActivity extends AppCompatActivity {
         cityEditText = binding.inputCityText;
         postalCodeEditText = binding.inputPostalCodeText;
         emailEditText = binding.inputEmailText;
-        contactImageUri = binding.contactImage;
+        contactImageButton = binding.contactImage;
 
         binding.addButtonDb.setOnClickListener(v -> {
             try {
+
                 DatabaseHelper db = new DatabaseHelper(AddContactActivity.this);
 
                 String firstName = firstNameEditText.getText() != null ?
@@ -72,8 +112,12 @@ public class AddContactActivity extends AppCompatActivity {
                         postalCodeEditText.getText().toString().trim() : "";
                 String email = emailEditText.getText() != null ?
                         emailEditText.getText().toString().trim() : "";
-                String contactImage = contactImageUri.getTag() != null ?
-                        contactImageUri.getTag().toString() : "";
+
+                String contactImage = "";
+                if (imageFile != null)
+                    contactImage = copyImage(imageFile);
+
+                Log.d("AddContactActivity", "Contact image: " + contactImage);
 
                 if (!getIntent().hasExtra("id"))
                     db.addContact(firstName, lastName, phoneNumber, address, city, postalCode, email, contactImage);
@@ -82,11 +126,21 @@ public class AddContactActivity extends AppCompatActivity {
                             firstName, lastName, phoneNumber, address, city, postalCode, email, contactImage);
                 finish();
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.d("AddContactActivity", "Error: " + e.getMessage());
             }
         });
 
+        binding.contactImage.setOnClickListener(v -> onSelectNewPhotoButtonClick());
+
         setUpdateActivity();
+    }
+
+    private void onSelectNewPhotoButtonClick() {
+        ActivityResultContracts.PickVisualMedia.VisualMediaType mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
+        PickVisualMediaRequest request = new PickVisualMediaRequest.Builder()
+                .setMediaType(mediaType)
+                .build();
+        pickMedia.launch(request);
     }
 
     @Override
@@ -127,7 +181,42 @@ public class AddContactActivity extends AppCompatActivity {
             emailEditText.setText(getIntent().getStringExtra("email"));
         }
         if (getIntent().hasExtra("image_uri")) {
-            contactImageUri.setTag(getIntent().getStringExtra("image_uri"));
+            contactImageButton.setTag(getIntent().getStringExtra("image_uri"));
         }
+    }
+
+    private String copyImage(Bitmap image) {
+        try {
+            String appDataDir = getApplicationContext().getApplicationInfo().dataDir;
+            appDataDir = Files.createDirectories(Paths.get(appDataDir + '/' + "images")).toString();
+
+            String fileName = appDataDir + "/" + UUID.randomUUID().toString() + ".jpg";
+            System.out.println("PhotoPicker: Destination: " + fileName);
+
+            try (FileOutputStream out = new FileOutputStream(fileName)) {
+                image.compress(Bitmap.CompressFormat.PNG, 90, out);
+                return out.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    private Bitmap uriToBitmap(Uri selectedFileUri) {
+        try {
+            ParcelFileDescriptor parcelFileDescriptor =
+                    getContentResolver().openFileDescriptor(selectedFileUri, "r");
+            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+            parcelFileDescriptor.close();
+            return image;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
