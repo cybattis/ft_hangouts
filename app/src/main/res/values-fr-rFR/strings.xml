@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ft_hangouts</string>
+    <string name="title_messages">Messages</string>
+    <string name="title_keypad">Clavier</string>
+    <string name="title_contacts">Contactes</string>
+    <string name="title_settings">Parametres</string>
+    <string name="text_add_contact">Nouveau contact</string>
+    <string name="empty_contact_list">Aucun contactes !</string>
+    <string name="update_button">Modifier</string>
+    <string name="text_first_name">Prenom</string>
+    <string name="text_last_name">Nom</string>
+    <string name="text_phone_number">Numero</string>
+    <string name="title_update_contact">Modifier contacte</string>
+</resources>

@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:visibility="visible">
 
+    <include
+        android:id="@+id/main_toolbar"
+        layout="@layout/main_toolbar"
+        />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="0dp"
