@@ -75,10 +75,14 @@ public class AddContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityAddContactBinding.inflate(getLayoutInflater());
+        Utils.setTheme(this);
+
+        binding = ActivityAddContactBinding.inflate(this.getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.addContactToolbar);
+        // Setup toolbar
+        setSupportActionBar(binding.addContactToolbar.myToolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.new_contact_constraint_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -86,8 +90,6 @@ public class AddContactActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Add Up navigation button
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         contactImageButton = binding.contactImage;
         contactImageButton.setOnClickListener(v -> onSelectNewPhotoButtonClick());
@@ -105,17 +107,7 @@ public class AddContactActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.top_actionbar_menu, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            Log.d("MainActivity", "Settings clicked");
-            return true;
-        }
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;

@@ -1,11 +1,12 @@
 package com.example.ft_hangouts;
 
-import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -14,9 +15,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.ft_hangouts.databinding.ActivityMainBinding;
+import com.example.ft_hangouts.ui.settings.SettingsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -26,10 +26,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(this.getLayoutInflater());
-        setContentView(binding.getRoot());
+        Utils.setTheme(this);
 
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         setSupportActionBar(binding.mainToolbar.myToolbar);
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         // Passing each menu ID as a set of Ids because each
@@ -55,11 +57,24 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_settings) {
             Log.d("MainActivity", "Settings clicked");
+            // Navigate to settings activity
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences prefs = getSharedPreferences(getPackageName() + "_preferences", Context.MODE_PRIVATE);
+        if (prefs.getBoolean("theme_changed", false)) {
+            prefs.edit().remove("theme_changed").apply();
+            recreate();
+        }
+    }
 
     @Override
     public boolean onSupportNavigateUp() {

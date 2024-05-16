@@ -4,6 +4,7 @@
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/settings_24"
+        android:background="?attr/colorPrimary"
         android:title="@string/title_settings"
         app:showAsAction="always" />
 </menu>

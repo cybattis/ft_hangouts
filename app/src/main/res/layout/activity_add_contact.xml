@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/add_contact_activity_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
+    <include
         android:id="@+id/add_contact_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/Base_ToolbarStyle"
-        android:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        layout="@layout/main_toolbar" />
 
-    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ScrollView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -49,7 +46,6 @@
                     android:scaleType="centerCrop"
                     app:srcCompat="@drawable/default_user" />
             </androidx.cardview.widget.CardView>
-
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_first_name_layout"

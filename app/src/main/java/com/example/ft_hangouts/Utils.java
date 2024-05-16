@@ -1,6 +1,7 @@
 package com.example.ft_hangouts;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -95,5 +96,16 @@ public class Utils {
         Matrix matrix = new Matrix();
         matrix.postRotate(orientation);
         return Bitmap.createBitmap(imageFile, 0, 0, imageFile.getWidth(), imageFile.getHeight(), matrix, true);
+    }
+
+    public static int getTheme(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getPackageName() + "_preferences", Context.MODE_PRIVATE);
+        return sharedPref.getInt("theme", R.style.Overlay_purple);
+    }
+    public static int setTheme(Context context) {
+        int theme = getTheme(context);
+        context.setTheme(theme);
+        return theme;
     }
 }

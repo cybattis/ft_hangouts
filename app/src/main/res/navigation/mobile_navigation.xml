@@ -29,10 +29,9 @@
             android:name="com.example.ft_hangouts.ui.addContact.AddContactActivity"
             android:label="activity_add_contact"
             tools:layout="@layout/activity_add_contact" />
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.ft_hangouts.ui.settings.SettingsFragment"
-        android:label="@string/title_settings"
-        tools:layout="@layout/fragment_setting" />
+    <activity
+        android:id="@+id/settingsActivity"
+        android:name="com.example.ft_hangouts.ui.settings.SettingsActivity"
+        android:label="SettingsActivity" />
 
 </navigation>
