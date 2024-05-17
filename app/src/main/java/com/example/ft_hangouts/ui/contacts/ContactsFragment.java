@@ -40,6 +40,7 @@ public class ContactsFragment extends Fragment {
         contactList = binding.contactList;
         binding.addContactActivityButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AddContactActivity.class);
+
             startActivity(intent);
         });
 

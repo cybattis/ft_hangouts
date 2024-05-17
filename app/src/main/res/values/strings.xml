@@ -27,5 +27,6 @@
     <string name="text_contact_name">Contact name</string>
     <string name="text_save">save</string>
     <string name="text_contact">Contact</string>
+    <string name="text_edit">Edit</string>
 
 </resources>
