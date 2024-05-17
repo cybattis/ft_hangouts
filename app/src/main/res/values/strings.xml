@@ -24,5 +24,8 @@
     <string name="text_email">Email</string>
     <string name="text_contact_picture_description">Contact picture</string>
     <string name="text_theme">Theme</string>
+    <string name="text_contact_name">Contact name</string>
+    <string name="text_save">save</string>
+    <string name="text_contact">Contact</string>
 
 </resources>

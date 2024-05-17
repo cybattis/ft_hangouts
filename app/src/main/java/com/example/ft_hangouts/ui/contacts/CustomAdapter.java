@@ -2,9 +2,12 @@ package com.example.ft_hangouts.ui.contacts;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,9 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ft_hangouts.R;
-import com.example.ft_hangouts.ui.addContact.AddContactActivity;
-
-import java.util.ArrayList;
+import com.example.ft_hangouts.ui.contactPage.ContactPageActivity;
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
 
@@ -36,15 +37,20 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        System.out.println("onBindView: " + contactsData.contact_id.get(position));
+        Log.d("onBindViewHolder: ", contactsData.contact_id.get(position));
 
-        holder.contact_id_txt.setText(String.valueOf(contactsData.contact_id.get(position)));
         holder.contact_name_txt.setText(String.format("%s %s", contactsData.contact_first_name.get(position),
                                                                 contactsData.contact_last_name.get(position)));
-
+        try {
+            Uri uri = Uri.parse(contactsData.contact_image_uri.get(position));
+            holder.contact_image.setImageURI(uri);
+        } catch (Exception e) {
+            Log.d("onBindViewHolder: ", "No image found");
+            holder.contact_image.setImageResource(R.drawable.default_user);
+        }
         holder.mainLayout.setOnClickListener(v -> {
             System.out.println("onBindView: " + contactsData.contact_id.get(position));
-            Intent intent = new Intent(context, AddContactActivity.class);
+            Intent intent = new Intent(context, ContactPageActivity.class);
             intent.putExtra("id", contactsData.contact_id.get(position));
             intent.putExtra("first_name", contactsData.contact_first_name.get(position));
             intent.putExtra("last_name", contactsData.contact_last_name.get(position));
@@ -53,7 +59,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             intent.putExtra("city", contactsData.contact_city.get(position));
             intent.putExtra("postal_code", contactsData.contact_postal_code.get(position));
             intent.putExtra("email", contactsData.contact_email.get(position));
-            intent.putExtra("image_uri", contactsData.contact_image_uri.get(position));
+            if (contactsData.contact_image_uri.get(position) != null)
+                intent.putExtra("image_uri", contactsData.contact_image_uri.get(position));
             context.startActivity(intent);
         });
     }
@@ -64,13 +71,15 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView contact_id_txt, contact_name_txt;
+        TextView contact_name_txt;
+        ImageView contact_image;
+
         LinearLayout mainLayout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            contact_id_txt = itemView.findViewById(R.id.contact_card_id);
             contact_name_txt = itemView.findViewById(R.id.contact_card_name);
+            contact_image = itemView.findViewById(R.id.contact_row_image);
             mainLayout = itemView.findViewById(R.id.mainLayout);
         }
     }

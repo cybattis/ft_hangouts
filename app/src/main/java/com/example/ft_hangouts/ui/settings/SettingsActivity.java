@@ -32,10 +32,10 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Setup toolbar
+        binding.settingToolbar.myToolbar.setTitle(R.string.title_settings);
         setSupportActionBar(binding.settingToolbar.myToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.settings_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
