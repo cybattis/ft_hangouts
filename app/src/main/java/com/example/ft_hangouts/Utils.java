@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
@@ -107,5 +108,19 @@ public class Utils {
         int theme = getTheme(context);
         context.setTheme(theme);
         return theme;
+    }
+
+    public static void removeImage(String image) {
+        if (image.isEmpty())
+            return;
+
+        File file = new File(image);
+        try {
+            if (file.exists() && !file.delete())
+                Log.w("RemoveImage", "Failed to delete image");
+            Log.d("RemoveImage", "Deleted image: " + image);
+        } catch (Exception e) {
+            Log.w("RemoveImage", "Failed to delete image: " + e.getMessage());
+        }
     }
 }

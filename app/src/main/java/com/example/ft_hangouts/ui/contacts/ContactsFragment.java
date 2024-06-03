@@ -1,5 +1,6 @@
 package com.example.ft_hangouts.ui.contacts;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,15 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ft_hangouts.database.DatabaseHelper;
 import com.example.ft_hangouts.databinding.FragmentContactsBinding;
-import com.example.ft_hangouts.ui.addContact.AddContactActivity;
+import com.example.ft_hangouts.ui.contacts.addContact.AddContactActivity;
 
 import java.util.ArrayList;
 
@@ -24,23 +26,38 @@ public class ContactsFragment extends Fragment {
 
     FragmentContactsBinding binding;
     DatabaseHelper db;
-    ContactsData contactsData;
-    CustomAdapter customAdapter;
-    RecyclerView contactList;
+    ContactAdapter contactAdapter;
+    ArrayList<Contact> contactsListData;
+    RecyclerView contactListView;
 
+    private final ActivityResultLauncher<Intent> contactPageActivity = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getData() == null)
+                return;
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                if (result.getData().getBooleanExtra("delete_contact", false))
+                    Toast.makeText(getContext(), "Contact deleted successfully", Toast.LENGTH_SHORT).show();
+            }
+            else if (result.getResultCode() == Activity.RESULT_CANCELED) {
+                if (result.getData().getBooleanExtra("delete_contact", false))
+                    Toast.makeText(getContext(), "Error when deleting contact", Toast.LENGTH_SHORT).show();
+                else if (result.getData().getBooleanExtra("error", false))
+                    Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    );
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        ContactsViewModel contactsViewModel =
-                new ViewModelProvider(this).get(ContactsViewModel.class);
 
         binding = FragmentContactsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        contactList = binding.contactList;
+        contactListView = binding.contactList;
+
         binding.addContactActivityButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AddContactActivity.class);
-
             startActivity(intent);
         });
 
@@ -51,12 +68,12 @@ public class ContactsFragment extends Fragment {
     }
 
     private void createContactList() {
-        contactsData = new ContactsData();
+        contactsListData = new ArrayList<>();
 
-        StoreDataInArrays();
+        fetchContactData();
 
-        customAdapter = new CustomAdapter(getContext(), contactsData);
-        binding.contactList.setAdapter(customAdapter);
+        contactAdapter = new ContactAdapter(getContext(), contactsListData, contactPageActivity);
+        binding.contactList.setAdapter(contactAdapter);
         binding.contactList.setLayoutManager(new LinearLayoutManager(ContactsFragment.this.getContext()));
     }
 
@@ -81,13 +98,14 @@ public class ContactsFragment extends Fragment {
         createContactList();
     }
 
-    void StoreDataInArrays() {
+    void fetchContactData() {
         Cursor cursor = db.fetch();
         if (cursor.getCount() == 0) {
             Toast.makeText(getContext(), "No contact", Toast.LENGTH_SHORT).show();
         } else {
             do {
-                contactsData.addContact(cursor);
+                Contact contact = new Contact(cursor);
+                contactsListData.add(contact);
             } while (cursor.moveToNext());
         }
     }

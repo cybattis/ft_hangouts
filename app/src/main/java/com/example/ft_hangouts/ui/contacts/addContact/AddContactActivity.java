@@ -1,4 +1,4 @@
-package com.example.ft_hangouts.ui.addContact;
+package com.example.ft_hangouts.ui.contacts.addContact;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -21,6 +21,7 @@ import com.example.ft_hangouts.R;
 import com.example.ft_hangouts.Utils;
 import com.example.ft_hangouts.database.DatabaseHelper;
 import com.example.ft_hangouts.databinding.ActivityAddContactBinding;
+import com.example.ft_hangouts.ui.contacts.Contact;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.File;
@@ -34,6 +35,8 @@ import java.util.UUID;
 public class AddContactActivity extends AppCompatActivity {
 
     private ActivityAddContactBinding binding;
+
+    Contact contact;
 
     TextInputEditText firstNameEditText;
     TextInputEditText lastNameEditText;
@@ -102,7 +105,10 @@ public class AddContactActivity extends AppCompatActivity {
         postalCodeEditText = binding.inputPostalCodeText;
         emailEditText = binding.inputEmailText;
 
-        setUpdateActivity();
+        contact = new Contact(getIntent());
+        if (contact.getContact_id() >= 0)
+            setUpdateActivity();
+
         binding.addButtonDb.setOnClickListener(v -> addButtonCallback());
     }
 
@@ -127,35 +133,20 @@ public class AddContactActivity extends AppCompatActivity {
     // Update contact
     // ========================================================================
     void setUpdateActivity() {
-        if (!getIntent().hasExtra("id"))
-            return;
 
         setTitle(getResources().getString(R.string.title_update_contact));
         binding.addButtonDb.setText(getResources().getString(R.string.update_button));
 
-        if (getIntent().hasExtra("first_name")) {
-            firstNameEditText.setText(getIntent().getStringExtra("first_name"));
-        }
-        if (getIntent().hasExtra("last_name")) {
-            lastNameEditText.setText(getIntent().getStringExtra("last_name"));
-        }
-        if (getIntent().hasExtra("phone_number")) {
-            phoneNumberEditText.setText(getIntent().getStringExtra("phone_number"));
-        }
-        if (getIntent().hasExtra("address")) {
-            addressEditText.setText(getIntent().getStringExtra("address"));
-        }
-        if (getIntent().hasExtra("city")) {
-            cityEditText.setText(getIntent().getStringExtra("city"));
-        }
-        if (getIntent().hasExtra("postal_code")) {
-            postalCodeEditText.setText(getIntent().getStringExtra("postal_code"));
-        }
-        if (getIntent().hasExtra("email")) {
-            emailEditText.setText(getIntent().getStringExtra("email"));
-        }
-        if (getIntent().hasExtra("image_uri")) {
-            oldImage = getIntent().getStringExtra("image_uri");
+        firstNameEditText.setText(contact.getFirstName());
+        lastNameEditText.setText(contact.getLastName());
+        phoneNumberEditText.setText(contact.getPhoneNumber());
+        addressEditText.setText(contact.getAddress());
+        cityEditText.setText(contact.getCity());
+        postalCodeEditText.setText(contact.getPostalCode());
+        emailEditText.setText(contact.getEmail());
+
+        if (!contact.getImageUri().isEmpty()){
+            oldImage = contact.getImageUri();
             contactImageButton.setImageURI(Uri.parse(oldImage));
             contactImageButton.setTag(oldImage);
         }
@@ -163,40 +154,34 @@ public class AddContactActivity extends AppCompatActivity {
 
     private void addButtonCallback() {
         try {
-            DatabaseHelper db = new DatabaseHelper(AddContactActivity.this);
+            DatabaseHelper db = new DatabaseHelper(this);
 
-            String firstName = firstNameEditText.getText() != null ?
-                    firstNameEditText.getText().toString().trim() : "";
-            String lastName = lastNameEditText.getText() != null ?
-                    lastNameEditText.getText().toString().trim() : "";
-            String phoneNumber = phoneNumberEditText.getText() != null ?
-                    phoneNumberEditText.getText().toString() : "";
-            String address = addressEditText.getText() != null ?
-                    addressEditText.getText().toString().trim() : "";
-            String city = cityEditText.getText() != null ?
-                    cityEditText.getText().toString().trim() : "";
-            String postalCode = postalCodeEditText.getText() != null ?
-                    postalCodeEditText.getText().toString().trim() : "";
-            String email = emailEditText.getText() != null ?
-                    emailEditText.getText().toString().trim() : "";
+            Log.d("addButtonCallback", "First name: " + firstNameEditText.getText().toString().trim());
+            contact.setFirstName(firstNameEditText.getText().toString().trim());
+            contact.setLastName(lastNameEditText.getText().toString().trim());
+            contact.setPhoneNumber(phoneNumberEditText.getText().toString().trim());
+            contact.setAddress(addressEditText.getText().toString().trim());
+            contact.setCity(cityEditText.getText().toString().trim());
+            contact.setPostalCode(postalCodeEditText.getText().toString().trim());
+            contact.setEmail(emailEditText.getText().toString().trim());
 
-            String contactImage = oldImage;
             if (imageFile != null)
-                contactImage = copyImage(imageFile);
-            Log.d("addButtonCallback", "Contact image: " + contactImage);
+                contact.setImageUri(copyImage(imageFile));
+            Log.d("addButtonCallback", "Contact image: " + contact.getImageUri());
 
-            if (!getIntent().hasExtra("id")) {
-                db.addContact(firstName, lastName, phoneNumber, address, city, postalCode, email, contactImage);
+            if (contact.getContact_id() == -1) {
+                Log.d("addButtonCallback", "Add contact");
+                db.addContact(contact);
             }
             else {
-                if (!Objects.equals(contactImage, oldImage))
-                    removeImage(oldImage);
-                db.update(Long.parseLong(Objects.requireNonNull(getIntent().getStringExtra("id"))),
-                        firstName, lastName, phoneNumber, address, city, postalCode, email, contactImage);
+                Log.d("addButtonCallback", "Update contact");
+                if (!Objects.equals(contact.getImageUri(), oldImage))
+                    Utils.removeImage(oldImage);
+                db.update(contact);
             }
             finish();
         } catch (Exception e) {
-            Log.w("addButtonCallback", "Error: " + e.getMessage());
+            Log.w("addButtonCallback", Objects.requireNonNull(e.getMessage()));
         }
     }
 
@@ -221,18 +206,5 @@ public class AddContactActivity extends AppCompatActivity {
             Log.d("copyImage", e.getMessage(), e);
         }
         return "";
-    }
-
-    private void removeImage(String image) {
-        if (image.isEmpty())
-            return;
-
-        File file = new File(image);
-        try {
-            if (file.exists() && !file.delete())
-                Log.w("PhotoPicker", "Failed to delete old image");
-        } catch (Exception e) {
-            Log.w("PhotoPicker", "Failed to delete old image: " + e.getMessage());
-        }
     }
 }
