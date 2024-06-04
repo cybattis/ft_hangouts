@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/contact_page_activity_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="RtlCompat" >
 
     <include
         android:id="@+id/contact_page_toolbar"
@@ -38,24 +40,11 @@
                 tools:layout_conversion_absoluteHeight="200dp"
                 tools:layout_conversion_absoluteWidth="411dp">
 
-                <Button
-                    android:id="@+id/contact_page_edit_button"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginHorizontal="12dp"
-                    android:layout_marginVertical="5dp"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:minHeight="0dp"
-                    android:text="@string/text_edit"
-                    app:cornerRadius="8dp" />
-
                 <ImageView
                     android:id="@+id/contact_page_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="TODO"
+                    android:contentDescription="@string/contact_image_description"
                     android:foregroundGravity="top"
                     android:src="@drawable/default_user"
                     tools:layout_conversion_absoluteHeight="200dp"
@@ -64,13 +53,29 @@
                     tools:layout_editor_absoluteY="56dp" />
 
                 <ImageButton
+                    android:id="@+id/contact_page_edit_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="10dp"
+                    android:backgroundTint="#00FFFFFF"
+                    android:contentDescription="@string/text_edit_contact"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/edit_24" />
+
+                <ImageButton
                     android:id="@+id/contact_page_delete_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:adjustViewBounds="false"
                     android:backgroundTint="#00FFFFFF"
+                    android:contentDescription="@string/delete_contact_button_text"
                     android:cropToPadding="false"
-                    android:padding="20dp"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/delete_24" />
 
@@ -112,11 +117,26 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/contact_page_name" />
 
+            <ImageView
+                android:id="@+id/contact_address_icon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/address_icon_text"
+                android:maxWidth="39dp"
+                android:maxHeight="39dp"
+                android:minWidth="39dp"
+                android:minHeight="39dp"
+                android:padding="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/contact_page_phone_number"
+                app:srcCompat="@drawable/location_pin_24" />
+
             <TextView
                 android:id="@+id/contact_page_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="32dp"
                 android:drawablePadding="10dp"
@@ -124,17 +144,15 @@
                 android:padding="10dp"
                 android:text="@string/text_address"
                 android:textAlignment="viewStart"
-                app:drawableLeftCompat="@drawable/location_pin_24"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/contact_address_icon"
                 app:layout_constraintTop_toBottomOf="@+id/contact_page_phone_number" />
 
             <TextView
                 android:id="@+id/contact_page_city"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="64dp"
+                android:layout_marginStart="72dp"
                 android:layout_marginTop="8dp"
                 android:drawablePadding="10dp"
                 android:gravity="center"

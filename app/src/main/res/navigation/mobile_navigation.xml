@@ -41,5 +41,10 @@
         android:name="com.example.ft_hangouts.ui.contacts.contactPage.ContactPageActivity"
         android:label="@string/text_contact"
         tools:layout="@layout/activity_contact_page" />
+    <activity
+        android:id="@+id/conversationActivity"
+        android:name="com.example.ft_hangouts.ui.messages.ConversationActivity"
+        android:label="activity_conversation"
+        tools:layout="@layout/activity_conversation" />
 
 </navigation>

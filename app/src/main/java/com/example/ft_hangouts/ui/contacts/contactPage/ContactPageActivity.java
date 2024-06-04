@@ -173,6 +173,11 @@ public class ContactPageActivity extends AppCompatActivity {
         else
             postalCodeText.setVisibility(View.GONE);
 
+        if (contact.getAddress().isEmpty() && contact.getCity().isEmpty() && contact.getPostalCode().isEmpty())
+            binding.contactAddressIcon.setVisibility(View.GONE);
+        else
+            binding.contactAddressIcon.setVisibility(View.VISIBLE);
+
         if (!contact.getEmail().isEmpty()) {
             emailText.setText(contact.getEmail());
             emailText.setVisibility(View.VISIBLE);

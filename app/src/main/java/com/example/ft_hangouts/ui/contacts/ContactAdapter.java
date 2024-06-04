@@ -90,7 +90,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             contact_name_txt = itemView.findViewById(R.id.contact_card_name);
-            contact_image = itemView.findViewById(R.id.contact_row_image);
+            contact_image = itemView.findViewById(R.id.contact_image_button);
             mainLayout = itemView.findViewById(R.id.mainLayout);
         }
     }
