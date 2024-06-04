@@ -136,33 +136,47 @@ public class ContactPageActivity extends AppCompatActivity {
             finish();
         }
 
+        Log.d("ContactPageActivity", "Contact : " + contact.getFullContact());
+
         if (contact.getFirstName().isEmpty() && contact.getLastName().isEmpty())
             contactName.setVisibility(View.GONE);
-        else
+        else {
             contactName.setText(String.format("%s", contact.getFullName()));
+            contactName.setVisibility(View.VISIBLE);
+        }
 
-        if (!contact.getPhoneNumber().isEmpty())
+        if (!contact.getPhoneNumber().isEmpty()) {
             phoneNumberText.setText(contact.getPhoneNumber());
+            phoneNumberText.setVisibility(View.VISIBLE);
+        }
         else
             phoneNumberText.setVisibility(View.GONE);
 
-        if (!contact.getAddress().isEmpty())
+        if (!contact.getAddress().isEmpty()) {
             addressText.setText(contact.getAddress());
+            addressText.setVisibility(View.VISIBLE);
+        }
         else
             addressText.setVisibility(View.GONE);
 
-        if (!contact.getCity().isEmpty())
+        if (!contact.getCity().isEmpty()) {
             cityText.setText(contact.getCity());
+            cityText.setVisibility(View.VISIBLE);
+        }
         else
             cityText.setVisibility(View.GONE);
 
-        if (!contact.getPostalCode().isEmpty())
+        if (!contact.getPostalCode().isEmpty()) {
             postalCodeText.setText(contact.getPostalCode());
+            postalCodeText.setVisibility(View.VISIBLE);
+        }
         else
             postalCodeText.setVisibility(View.GONE);
 
-        if (!contact.getEmail().isEmpty())
+        if (!contact.getEmail().isEmpty()) {
             emailText.setText(contact.getEmail());
+            emailText.setVisibility(View.VISIBLE);
+        }
         else
             emailText.setVisibility(View.GONE);
 

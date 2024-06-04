@@ -2,7 +2,6 @@ package com.example.ft_hangouts.ui.contacts;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 

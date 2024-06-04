@@ -54,9 +54,9 @@ public class ContactsFragment extends Fragment {
         binding = FragmentContactsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        contactListView = binding.contactList;
+        contactListView = binding.contactsList;
 
-        binding.addContactActivityButton.setOnClickListener(v -> {
+        binding.newContactButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AddContactActivity.class);
             startActivity(intent);
         });
@@ -73,8 +73,8 @@ public class ContactsFragment extends Fragment {
         fetchContactData();
 
         contactAdapter = new ContactAdapter(getContext(), contactsListData, contactPageActivity);
-        binding.contactList.setAdapter(contactAdapter);
-        binding.contactList.setLayoutManager(new LinearLayoutManager(ContactsFragment.this.getContext()));
+        binding.contactsList.setAdapter(contactAdapter);
+        binding.contactsList.setLayoutManager(new LinearLayoutManager(ContactsFragment.this.getContext()));
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {

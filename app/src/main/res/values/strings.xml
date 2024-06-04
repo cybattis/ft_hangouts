@@ -28,5 +28,7 @@
     <string name="text_save">save</string>
     <string name="text_contact">Contact</string>
     <string name="text_edit">Edit</string>
+    <string name="add_conversation_text">Add conversation</string>
+    <string name="text_last_message">last message</string>
 
 </resources>
