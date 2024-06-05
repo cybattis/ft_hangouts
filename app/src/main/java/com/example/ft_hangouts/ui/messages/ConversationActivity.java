@@ -1,6 +1,7 @@
 package com.example.ft_hangouts.ui.messages;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,14 +11,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.ft_hangouts.R;
 import com.example.ft_hangouts.Utils;
+import com.example.ft_hangouts.database.DatabaseHelper;
 import com.example.ft_hangouts.databinding.ActivityConversationBinding;
 import com.example.ft_hangouts.ui.contacts.Contact;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class ConversationActivity extends AppCompatActivity {
 
     private ActivityConversationBinding binding;
+    private DatabaseHelper db;
     Contact contact;
 
     @Override
@@ -27,13 +31,20 @@ public class ConversationActivity extends AppCompatActivity {
         Utils.setTheme(this);
 
         binding = ActivityConversationBinding.inflate(getLayoutInflater());
-        setContentView(R.layout.activity_conversation);
+        setContentView(binding.getRoot());
+
+        db = new DatabaseHelper(this);
 
         // Fetch contact from intent
-        contact = new Contact(getIntent());
+        contact = db.getContact(getIntent().getLongExtra("contact_id", -1));
+        if (contact == null) {
+            Log.e("ConversationActivity", "Contact not found");
+            finish();
+            return;
+        }
 
         // Setup toolbar
-        String toolbarTitle = contact.getFullName().isEmpty() ? contact.getPhoneNumber() : contact.getFullName();
+        CharSequence toolbarTitle = contact.getFullName().isEmpty() ? contact.getPhoneNumber() : contact.getFullName();
         binding.conversationActivityToolbar.myToolbar.setTitle(toolbarTitle);
         setSupportActionBar(binding.conversationActivityToolbar.myToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);

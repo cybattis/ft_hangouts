@@ -19,4 +19,5 @@
         android:padding="0dp"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/default_user" />
+
 </androidx.cardview.widget.CardView>

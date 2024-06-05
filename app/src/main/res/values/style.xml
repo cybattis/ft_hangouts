@@ -10,26 +10,31 @@
     <style name="Overlay_purple" parent="Theme.Ft_hangouts">
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimaryContainer">@color/purple_400</item>
     </style>
 
     <style name="Overlay_orange" parent="Theme.Ft_hangouts">
         <item name="colorPrimary">@color/orange_500</item>
         <item name="colorPrimaryVariant">@color/orange_700</item>
+        <item name="colorPrimaryContainer">@color/orange_400</item>
     </style>
 
     <style name="Overlay_pink" parent="Theme.Ft_hangouts">
         <item name="colorPrimary">@color/pink_500</item>
         <item name="colorPrimaryVariant">@color/pink_700</item>
+        <item name="colorPrimaryContainer">@color/pink_400</item>
     </style>
 
     <style name="Overlay_green" parent="Theme.Ft_hangouts">
         <item name="colorPrimary">@color/green_500</item>
         <item name="colorPrimaryVariant">@color/green_700</item>
+        <item name="colorPrimaryContainer">@color/green_400</item>
     </style>
 
     <style name="Overlay_turquoise" parent="Theme.Ft_hangouts">
         <item name="colorPrimary">@color/turquoise_500</item>
         <item name="colorPrimaryVariant">@color/turquoise_700</item>
+        <item name="colorPrimaryContainer">@color/turquoise_400</item>
     </style>
 
     <style name="toolbar_text_theme_white">

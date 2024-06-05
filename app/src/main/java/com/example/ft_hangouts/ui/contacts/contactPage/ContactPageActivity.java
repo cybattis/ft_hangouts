@@ -3,9 +3,11 @@ package com.example.ft_hangouts.ui.contacts.contactPage;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,15 +22,14 @@ import com.example.ft_hangouts.database.DatabaseHelper;
 import com.example.ft_hangouts.databinding.ActivityContactPageBinding;
 import com.example.ft_hangouts.ui.contacts.addContact.AddContactActivity;
 import com.example.ft_hangouts.ui.contacts.Contact;
+import com.example.ft_hangouts.ui.messages.ConversationActivity;
 
 import java.util.Objects;
 
 public class ContactPageActivity extends AppCompatActivity {
 
     private ActivityContactPageBinding binding;
-
     Contact contact;
-
     TextView contactName;
     TextView phoneNumberText;
     TextView addressText;
@@ -36,6 +37,7 @@ public class ContactPageActivity extends AppCompatActivity {
     TextView postalCodeText;
     TextView emailText;
     ImageView contactImage;
+    ImageButton messageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class ContactPageActivity extends AppCompatActivity {
         cityText = binding.contactPageCity;
         postalCodeText = binding.contactPagePostalCode;
         emailText = binding.contactPageEmail;
+        messageButton = binding.contactMessageButton;
 
         contact = new Contact(getIntent());
         if (contact.getContact_id() == -1) {
@@ -129,7 +132,6 @@ public class ContactPageActivity extends AppCompatActivity {
         setContent();
     }
 
-    // TODO: visibility not set when updating contact
     void setContent() {
         if (contact.getContact_id() == -1) {
             Log.e("ContactPageActivity", "No id found");
@@ -148,6 +150,17 @@ public class ContactPageActivity extends AppCompatActivity {
         if (!contact.getPhoneNumber().isEmpty()) {
             phoneNumberText.setText(contact.getPhoneNumber());
             phoneNumberText.setVisibility(View.VISIBLE);
+            messageButton.setVisibility(View.VISIBLE);
+
+            if (PhoneNumberUtils.isGlobalPhoneNumber(contact.getPhoneNumber()))
+                messageButton.setOnClickListener(v -> {
+                    Intent intent = new Intent(this, ConversationActivity.class);
+                    intent.putExtra("contact_id", contact.getContact_id());
+                    startActivity(intent);
+                    finish();
+                });
+            else
+                messageButton.setActivated(false);
         }
         else
             phoneNumberText.setVisibility(View.GONE);

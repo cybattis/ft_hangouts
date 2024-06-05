@@ -16,20 +16,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_gchat"
+        android:id="@+id/recycler_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="?attr/actionBarSize"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@+id/layout_gchat_chatbox"
+        app:layout_constraintBottom_toTopOf="@+id/layout_input_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_gchat_chatbox"
+        android:id="@+id/layout_input_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -39,16 +41,14 @@
             android:id="@+id/input_message_layout"
             style="?attr/textInputOutlinedDenseStyle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:hint="@string/enter_message"
-            android:paddingStart="15dp"
-            android:paddingBottom="10dp"
             app:boxCornerRadiusBottomEnd="10dp"
             app:boxCornerRadiusBottomStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button_gchat_send"
+            app:layout_constraintEnd_toStartOf="@+id/button_message_send"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlSymmetry">
@@ -56,18 +56,17 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_message"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:inputType="textMultiLine|textCapSentences|textAutoComplete|textAutoCorrect|textEnableTextConversionSuggestions" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
-            android:id="@+id/button_gchat_send"
+            android:id="@+id/button_message_send"
             android:layout_width="64dp"
             android:layout_height="0dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/send_text"
-            android:paddingBottom="10dp"
             android:src="@drawable/send_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

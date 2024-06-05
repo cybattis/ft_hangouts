@@ -39,5 +39,6 @@
     <string name="no">no</string>
     <string name="send_text">Send</string>
     <string name="enter_message">Enter Message</string>
+    <string name="go_to_conversation_text">Go to conversation</string>
 
 </resources>
