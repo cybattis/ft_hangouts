@@ -13,11 +13,9 @@ import com.example.ft_hangouts.ui.contacts.Contact;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    // Table Name
-    public static final String TABLE_NAME = "CONTACTS";
-
-    // Table columns
     private static final String _ID = "_id";
+
+    // Contact table columns
     private static final String FIRST_NAME = "first_name";
     private static final String LAST_NAME = "last_name";
     private static final String PHONE_NUMBER = "phone_number";
@@ -26,6 +24,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String POSTAL_CODE = "postal_code";
     private static final String EMAIL = "email";
     private static final String CONTACT_IMAGE_URI = "image_uri";
+
+    // Message table columns
+    private static final String MESSAGE = "message";
+    private static final String DATE_RECEIVE = "date_receive";
+    private static final String DATE_SEND = "date_send";
+    private static final String STATUS = "status";
+    private static final String ERROR_CODE = "error_code";
+    private static final String IS_ME = "is_me";
+    private static final String CONTACT_ID = "contact_id";
+
 
     // Database Information
     static final String DB_NAME = "ft_hangouts_contacts.db";
@@ -36,9 +44,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // database version
     static final int DB_VERSION = 1;
 
-    // Creating table query
+    // Creating contacts table query
+    private static final String CONTACT_TABLE_NAME = "CONTACTS";
     private static final String CREATE_CONTACT_TABLE =
-            "CREATE TABLE " + TABLE_NAME + "("
+            "CREATE TABLE " + CONTACT_TABLE_NAME + " ("
             + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + FIRST_NAME + " TEXT, "
             + LAST_NAME + " TEXT, "
@@ -49,6 +58,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + EMAIL + " TEXT, "
             + CONTACT_IMAGE_URI + " TEXT NOT NULL);";
 
+    // Creating messages table query
+    private static final String MESSAGES_TABLE_NAME = "MESSAGES";
+    private static final String CREATE_MESSAGES_TABLE =
+            "CREATE TABLE " + MESSAGES_TABLE_NAME + " ("
+            + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + MESSAGE + " TEXT, "
+            + DATE_RECEIVE + " TEXT, "
+            + DATE_SEND + " TEXT, "
+            + STATUS + " INTEGER, "
+            + ERROR_CODE + " INTEGER, "
+            + IS_ME + " BOOLEAN, "
+            + CONTACT_ID + " INTEGER NOT NULL, "
+            + "FOREIGN KEY(" + CONTACT_ID + ") REFERENCES " + CONTACT_TABLE_NAME + "(" + _ID + "));";
+
     public DatabaseHelper(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
         this.context = context;
@@ -57,17 +80,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_CONTACT_TABLE);
+        db.execSQL(CREATE_MESSAGES_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CONTACT_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + MESSAGES_TABLE_NAME);
         onCreate(db);
     }
 
     public void close() {
         database.close();
     }
+
+    // =============================================
+    // CONTACTS
+    // =============================================
 
     public void addContact(Contact contact) {
         database = this.getWritableDatabase();
@@ -82,14 +111,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(EMAIL, contact.getEmail());
         cv.put(CONTACT_IMAGE_URI, contact.getImageUri());
 
-        long result = database.insert(TABLE_NAME, null, cv);
+        long result = database.insert(CONTACT_TABLE_NAME, null, cv);
         if (result == -1)
             Toast.makeText(context, "Fail to add contact", Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(context, "Contact added successfully", Toast.LENGTH_SHORT).show();
     }
 
-    public Cursor fetch() {
+    public Cursor fetchAllContact() {
         String[] columns = new String[] {
                 DatabaseHelper._ID,
                 DatabaseHelper.FIRST_NAME,
@@ -102,14 +131,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 DatabaseHelper.CONTACT_IMAGE_URI
         };
         database = this.getReadableDatabase();
-        Cursor cursor = database.query(DatabaseHelper.TABLE_NAME, columns, null, null, null, null, null);
+        Cursor cursor = database.query(DatabaseHelper.CONTACT_TABLE_NAME, columns, null, null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
         return cursor;
     }
 
-    public Cursor fetch(long _id) {
+    public Cursor fetchContact(long _id) {
         String[] columns = new String[] {
                 DatabaseHelper._ID,
                 DatabaseHelper.FIRST_NAME,
@@ -122,7 +151,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 DatabaseHelper.CONTACT_IMAGE_URI
         };
         database = this.getReadableDatabase();
-        Cursor cursor = database.query(DatabaseHelper.TABLE_NAME, columns, DatabaseHelper._ID + " = " + _id, null, null, null, null);
+        Cursor cursor = database.query(DatabaseHelper.CONTACT_TABLE_NAME, columns, DatabaseHelper._ID + " = " + _id, null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
@@ -130,14 +159,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Contact getContact(long _id) {
-        Cursor cursor = fetch(_id);
+        Cursor cursor = fetchContact(_id);
         if (cursor.getCount() == 0) {
             return null;
         }
         return new Contact(cursor);
     }
 
-    public int update(Contact contact)
+    public int updateContact(Contact contact)
     {
         database = this.getWritableDatabase();
 
@@ -152,11 +181,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(DatabaseHelper.CONTACT_IMAGE_URI, contact.getImageUri());
 
         String clause = DatabaseHelper._ID + " = " + contact.getContact_id();
-        return database.update(DatabaseHelper.TABLE_NAME, contentValues, clause, null);
+        return database.update(DatabaseHelper.CONTACT_TABLE_NAME, contentValues, clause, null);
     }
 
-    public int delete(long _id) {
+    public int deleteContact(long _id) {
         database = this.getWritableDatabase();
-        return database.delete(DatabaseHelper.TABLE_NAME, DatabaseHelper._ID + "=" + _id, null);
+        return database.delete(DatabaseHelper.CONTACT_TABLE_NAME, DatabaseHelper._ID + "=" + _id, null);
     }
+
+    // =============================================
+    // MESSAGES
+    // =============================================
+
+    public int updateMessages(/* Message message, Contact contact */)
+    {
+        return 0;
+    }
+
 }

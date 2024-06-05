@@ -1,26 +1,25 @@
 package com.example.ft_hangouts.ui.messages;
 
-import android.telephony.SmsMessage;
-
 import com.example.ft_hangouts.ui.contacts.Contact;
 
 import java.util.ArrayList;
 
-public class Conversation {
-    private final Contact contact;
-    private ArrayList<SmsMessage> messages;
-
-    public Conversation(Contact contact, ArrayList<SmsMessage> messages) {
-        this.contact = contact;
-        this.messages = messages;
-    }
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public ArrayList<SmsMessage> getMessages() {
-        return messages;
-    }
-
-}
+//public class Message {
+//    private String message;
+//    private Contact sender;
+//    private String date;
+//
+//}
+//
+//public class Conversation {
+//    private ArrayList<Message> messages;
+//
+//    public Conversation(ArrayList<Message> messages) {
+//        this.messages = messages;
+//    }
+//
+//    public ArrayList<Message> getMessages() {
+//        return messages;
+//    }
+//
+//}

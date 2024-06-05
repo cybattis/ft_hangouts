@@ -99,7 +99,7 @@ public class ContactPageActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.putExtra("delete_contact", true);
 
-            int result = db.delete(contact.getContact_id());
+            int result = db.deleteContact(contact.getContact_id());
             if (result > 0) {
                 if (!imageUri.isEmpty())
                     Utils.removeImage(imageUri);

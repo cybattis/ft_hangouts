@@ -4,11 +4,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,7 +22,6 @@ import com.example.ft_hangouts.databinding.ActivityAddContactBinding;
 import com.example.ft_hangouts.ui.contacts.Contact;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -177,7 +174,8 @@ public class AddContactActivity extends AppCompatActivity {
                 Log.d("addButtonCallback", "Update contact");
                 if (!Objects.equals(contact.getImageUri(), oldImage))
                     Utils.removeImage(oldImage);
-                db.update(contact);
+                if (db.updateContact(contact) == 0)
+                    Log.e("addButtonCallback", "Failed to update contact");
             }
             finish();
         } catch (Exception e) {

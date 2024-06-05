@@ -70,7 +70,7 @@ public class ContactsFragment extends Fragment {
     private void createContactList() {
         contactsListData = new ArrayList<>();
 
-        fetchContactData();
+        fetchContact();
 
         contactAdapter = new ContactAdapter(getContext(), contactsListData, contactPageActivity);
         binding.contactsList.setAdapter(contactAdapter);
@@ -98,8 +98,8 @@ public class ContactsFragment extends Fragment {
         createContactList();
     }
 
-    void fetchContactData() {
-        Cursor cursor = db.fetch();
+    void fetchContact() {
+        Cursor cursor = db.fetchAllContact();
         if (cursor.getCount() == 0) {
             Toast.makeText(getContext(), "No contact", Toast.LENGTH_SHORT).show();
         } else {

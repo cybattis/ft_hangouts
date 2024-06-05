@@ -21,6 +21,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
+    private LifecycleListener myLifecycleOwner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+
+        myLifecycleOwner.getLifecycle().addObserver(new MyObserver());
+
     }
 
     @Override
@@ -66,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("MainActivity", "onPause");
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -74,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
             prefs.edit().remove("theme_changed").apply();
             recreate();
         }
+
+        Log.d("MainActivity", "onResume");
     }
 
     @Override
