@@ -40,5 +40,6 @@
     <string name="send_text">Send</string>
     <string name="enter_message">Enter Message</string>
     <string name="go_to_conversation_text">Go to conversation</string>
+    <string name="call_contact">Call contact</string>
 
 </resources>

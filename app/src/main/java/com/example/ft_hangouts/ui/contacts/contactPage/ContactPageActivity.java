@@ -1,17 +1,20 @@
 package com.example.ft_hangouts.ui.contacts.contactPage;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,8 +23,8 @@ import com.example.ft_hangouts.R;
 import com.example.ft_hangouts.Utils;
 import com.example.ft_hangouts.database.DatabaseHelper;
 import com.example.ft_hangouts.databinding.ActivityContactPageBinding;
-import com.example.ft_hangouts.ui.contacts.addContact.AddContactActivity;
 import com.example.ft_hangouts.ui.contacts.Contact;
+import com.example.ft_hangouts.ui.contacts.addContact.AddContactActivity;
 import com.example.ft_hangouts.ui.messages.ConversationActivity;
 
 import java.util.Objects;
@@ -37,7 +40,8 @@ public class ContactPageActivity extends AppCompatActivity {
     TextView postalCodeText;
     TextView emailText;
     ImageView contactImage;
-    ImageButton messageButton;
+    Button messageButton;
+    Button callButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,7 @@ public class ContactPageActivity extends AppCompatActivity {
         postalCodeText = binding.contactPagePostalCode;
         emailText = binding.contactPageEmail;
         messageButton = binding.contactMessageButton;
+        callButton = binding.contactCallButton;
 
         contact = new Contact(getIntent());
         if (contact.getContact_id() == -1) {
@@ -88,13 +93,13 @@ public class ContactPageActivity extends AppCompatActivity {
             intent.putExtra("city", contact.getCity());
             intent.putExtra("postal_code", contact.getPostalCode());
             intent.putExtra("email", contact.getEmail());
-            intent.putExtra("image_uri", contact.getImageUri());
+            intent.putExtra("image_uri", contact.getImagePath());
             startActivity(intent);
         });
 
         binding.contactPageDeleteButton.setOnClickListener(v -> {
             DatabaseHelper db = new DatabaseHelper(this);
-            String imageUri = contact.getImageUri();
+            String imageUri = contact.getImagePath();
 
             Intent intent = new Intent();
             intent.putExtra("delete_contact", true);
@@ -125,6 +130,35 @@ public class ContactPageActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
+                callAction();
+            } else
+                Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public  boolean isPermissionGranted() {
+        if (checkSelfPermission(android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            Log.v("TAG", "Permission is granted");
+            return true;
+        } else {
+            Log.v("TAG", "Permission is revoked");
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CALL_PHONE}, 1);
+            return false;
+        }
+    }
+
+    private void callAction() {
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setData(Uri.parse("tel:" + contact.getPhoneNumber()));
+        startActivity(intent);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         DatabaseHelper db = new DatabaseHelper(this);
@@ -138,8 +172,6 @@ public class ContactPageActivity extends AppCompatActivity {
             finish();
         }
 
-        Log.d("ContactPageActivity", "Contact : " + contact.getFullContact());
-
         if (contact.getFirstName().isEmpty() && contact.getLastName().isEmpty())
             contactName.setVisibility(View.GONE);
         else {
@@ -151,19 +183,30 @@ public class ContactPageActivity extends AppCompatActivity {
             phoneNumberText.setText(contact.getPhoneNumber());
             phoneNumberText.setVisibility(View.VISIBLE);
             messageButton.setVisibility(View.VISIBLE);
+            callButton.setVisibility(View.VISIBLE);
 
-            if (PhoneNumberUtils.isGlobalPhoneNumber(contact.getPhoneNumber()))
+            if (PhoneNumberUtils.isGlobalPhoneNumber(contact.getPhoneNumber())) {
                 messageButton.setOnClickListener(v -> {
                     Intent intent = new Intent(this, ConversationActivity.class);
                     intent.putExtra("contact_id", contact.getContact_id());
                     startActivity(intent);
-                    finish();
                 });
-            else
+
+                callButton.setOnClickListener(v -> {
+                    if (isPermissionGranted())
+                        callAction();
+                });
+            }
+            else {
                 messageButton.setActivated(false);
+                callButton.setActivated(false);
+            }
         }
-        else
+        else {
             phoneNumberText.setVisibility(View.GONE);
+            messageButton.setVisibility(View.GONE);
+            callButton.setVisibility(View.GONE);
+        }
 
         if (!contact.getAddress().isEmpty()) {
             addressText.setText(contact.getAddress());
@@ -198,8 +241,8 @@ public class ContactPageActivity extends AppCompatActivity {
         else
             emailText.setVisibility(View.GONE);
 
-        if (!contact.getImageUri().isEmpty())
-            contactImage.setImageURI(Uri.parse(contact.getImageUri()));
+        if (!contact.getImagePath().isEmpty())
+            contactImage.setImageURI(contact.getImageUri());
         else
             contactImage.setImageResource(R.drawable.default_user);
     }

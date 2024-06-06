@@ -10,6 +10,9 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.example.ft_hangouts.ui.contacts.Contact;
+import com.example.ft_hangouts.ui.messages.Message;
+
+import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -109,7 +112,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(CITY, contact.getCity());
         cv.put(POSTAL_CODE, contact.getPostalCode());
         cv.put(EMAIL, contact.getEmail());
-        cv.put(CONTACT_IMAGE_URI, contact.getImageUri());
+        cv.put(CONTACT_IMAGE_URI, contact.getImagePath());
 
         long result = database.insert(CONTACT_TABLE_NAME, null, cv);
         if (result == -1)
@@ -178,7 +181,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(DatabaseHelper.CITY, contact.getCity());
         contentValues.put(DatabaseHelper.POSTAL_CODE, contact.getPostalCode());
         contentValues.put(DatabaseHelper.EMAIL, contact.getEmail());
-        contentValues.put(DatabaseHelper.CONTACT_IMAGE_URI, contact.getImageUri());
+        contentValues.put(DatabaseHelper.CONTACT_IMAGE_URI, contact.getImagePath());
 
         String clause = DatabaseHelper._ID + " = " + contact.getContact_id();
         return database.update(DatabaseHelper.CONTACT_TABLE_NAME, contentValues, clause, null);
@@ -193,9 +196,63 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // MESSAGES
     // =============================================
 
-    public int updateMessages(/* Message message, Contact contact */)
-    {
-        return 0;
+    public void addMessage(Message message) {
+        database = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(MESSAGE, message.getMessage());
+
+        String dateReceive = message.getDateReceive() == null ? "" : message.getDateReceive().toString();
+        cv.put(DATE_RECEIVE, dateReceive);
+
+        String dateSend = message.getDateSend() == null ? "" : message.getDateSend().toString();
+        cv.put(DATE_SEND, dateSend);
+        cv.put(STATUS, 0);
+        cv.put(ERROR_CODE, 0);
+        cv.put(IS_ME, message.isMe() ? 1 : 0);
+        cv.put(CONTACT_ID, message.getContactId());
+
+        long result = database.insert(MESSAGES_TABLE_NAME, null, cv);
+        if (result == -1)
+            Toast.makeText(context, "Fail to add message", Toast.LENGTH_SHORT).show();
     }
 
+    public Cursor fetchMessages(long id) {
+        String[] columns = new String[] {
+                DatabaseHelper._ID,
+                DatabaseHelper.MESSAGE,
+                DatabaseHelper.DATE_RECEIVE,
+                DatabaseHelper.DATE_SEND,
+                DatabaseHelper.STATUS,
+                DatabaseHelper.ERROR_CODE,
+                DatabaseHelper.IS_ME,
+                DatabaseHelper.CONTACT_ID
+        };
+
+        database = this.getReadableDatabase();
+        Cursor cursor = database.query(
+                DatabaseHelper.MESSAGES_TABLE_NAME,
+                columns,
+                DatabaseHelper.CONTACT_ID + "= ?",
+                new String[]{String.valueOf(id)},
+                null, null, null
+        );
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
+
+    public ArrayList<Message> getMessages(long contactId) {
+        Cursor cursor = fetchMessages(contactId);
+        ArrayList<Message> messages = new ArrayList<>();
+        if (cursor.getCount() == 0) {
+            return messages;
+        }
+        while (!cursor.isAfterLast()) {
+            messages.add(new Message(cursor));
+            cursor.moveToNext();
+        }
+        return messages;
+    }
 }

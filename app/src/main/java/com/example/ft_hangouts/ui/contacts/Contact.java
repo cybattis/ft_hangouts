@@ -2,6 +2,7 @@ package com.example.ft_hangouts.ui.contacts;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 
 import androidx.annotation.Nullable;
 
@@ -72,7 +73,13 @@ public class Contact {
         return email;
     }
 
-    public String getImageUri() {
+    public Uri getImageUri() {
+        if (imageUri.isEmpty())
+            return Uri.EMPTY;
+        return Uri.parse(imageUri);
+    }
+
+    public String getImagePath() {
         return imageUri;
     }
 

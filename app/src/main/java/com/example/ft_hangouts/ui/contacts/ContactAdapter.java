@@ -48,7 +48,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         holder.contact_name_txt.setText(String.format("%s", contactsListData.get(position).getFullName()));
 
         try {
-            Uri uri = Uri.parse(contactsListData.get(position).getImageUri());
+            Uri uri = contactsListData.get(position).getImageUri();
             Log.d("onBindViewHolder: ", "Image found: " + uri.toString());
             if (!uri.toString().isEmpty())
                 holder.contact_image.setImageURI(uri);
@@ -71,7 +71,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             intent.putExtra("city", contactsListData.get(position).getCity());
             intent.putExtra("postal_code", contactsListData.get(position).getPostalCode());
             intent.putExtra("email", contactsListData.get(position).getEmail());
-            intent.putExtra("image_uri", contactsListData.get(position).getImageUri());
+            intent.putExtra("image_uri", contactsListData.get(position).getImagePath());
 
             contactPageActivity.launch(intent);
         });

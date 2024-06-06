@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_message"
+        android:id="@+id/conversation_message_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="?attr/actionBarSize"
@@ -38,17 +38,19 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/input_message_layout"
+            android:id="@+id/input_message_box"
             style="?attr/textInputOutlinedDenseStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:hint="@string/enter_message"
             app:boxCornerRadiusBottomEnd="10dp"
             app:boxCornerRadiusBottomStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
             app:boxCornerRadiusTopStart="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button_message_send"
+            app:layout_constraintEnd_toStartOf="@+id/send_message_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="RtlSymmetry">
@@ -60,18 +62,25 @@
                 android:inputType="textMultiLine|textCapSentences|textAutoComplete|textAutoCorrect|textEnableTextConversionSuggestions" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ImageButton
-            android:id="@+id/button_message_send"
-            android:layout_width="64dp"
-            android:layout_height="0dp"
+        <Button
+            android:id="@+id/send_message_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:background="@android:color/transparent"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="?attr/colorPrimary"
             android:contentDescription="@string/send_text"
-            android:src="@drawable/send_24"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="12dp"
+            app:cornerRadius="14dp"
+            app:icon="@drawable/send_24"
+            app:iconPadding="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorPrimary" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

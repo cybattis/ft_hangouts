@@ -142,8 +142,8 @@ public class AddContactActivity extends AppCompatActivity {
         postalCodeEditText.setText(contact.getPostalCode());
         emailEditText.setText(contact.getEmail());
 
-        if (!contact.getImageUri().isEmpty()){
-            oldImage = contact.getImageUri();
+        if (!contact.getImagePath().isEmpty()){
+            oldImage = contact.getImagePath();
             contactImageButton.setImageURI(Uri.parse(oldImage));
             contactImageButton.setTag(oldImage);
         }
@@ -153,7 +153,6 @@ public class AddContactActivity extends AppCompatActivity {
         try {
             DatabaseHelper db = new DatabaseHelper(this);
 
-            Log.d("addButtonCallback", "First name: " + firstNameEditText.getText().toString().trim());
             contact.setFirstName(firstNameEditText.getText().toString().trim());
             contact.setLastName(lastNameEditText.getText().toString().trim());
             contact.setPhoneNumber(phoneNumberEditText.getText().toString().trim());
@@ -164,7 +163,6 @@ public class AddContactActivity extends AppCompatActivity {
 
             if (imageFile != null)
                 contact.setImageUri(copyImage(imageFile));
-            Log.d("addButtonCallback", "Contact image: " + contact.getImageUri());
 
             if (contact.getContact_id() == -1) {
                 Log.d("addButtonCallback", "Add contact");
@@ -172,7 +170,7 @@ public class AddContactActivity extends AppCompatActivity {
             }
             else {
                 Log.d("addButtonCallback", "Update contact");
-                if (!Objects.equals(contact.getImageUri(), oldImage))
+                if (!Objects.equals(contact.getImagePath(), oldImage))
                     Utils.removeImage(oldImage);
                 if (db.updateContact(contact) == 0)
                     Log.e("addButtonCallback", "Failed to update contact");
@@ -198,10 +196,10 @@ public class AddContactActivity extends AppCompatActivity {
                 image.compress(Bitmap.CompressFormat.PNG, 100, out);
                 return fileName;
             } catch (IOException e) {
-                Log.d("copyImage", e.getMessage(), e);
+                Log.w("copyImage", e.getMessage(), e);
             }
         } catch (IOException e) {
-            Log.d("copyImage", e.getMessage(), e);
+            Log.w("copyImage", e.getMessage(), e);
         }
         return "";
     }
