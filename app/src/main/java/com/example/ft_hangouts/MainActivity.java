@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -21,7 +22,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
-    private LifecycleListener myLifecycleOwner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +47,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-
-        myLifecycleOwner.getLifecycle().addObserver(new MyObserver());
-
+        // Observe the lifecycle of the app
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(new LifecycleListener(this));
     }
 
     @Override
