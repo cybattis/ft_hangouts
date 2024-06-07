@@ -5,11 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.ft_hangouts.ui.contacts.Contact;
+import com.example.ft_hangouts.ui.messages.ConversationItem;
 import com.example.ft_hangouts.ui.messages.Message;
 
 import java.util.ArrayList;
@@ -104,6 +106,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void addContact(Contact contact) {
         database = this.getWritableDatabase();
 
+        Log.d("DatabaseHelper", "Adding contact: " + contact);
+
         ContentValues cv = new ContentValues();
         cv.put(FIRST_NAME, contact.getFirstName());
         cv.put(LAST_NAME, contact.getLastName());
@@ -164,13 +168,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Contact getContact(long _id) {
         Cursor cursor = fetchContact(_id);
         if (cursor.getCount() == 0) {
-            return null;
+            Log.e("getContact", "Contact not found");
+            return new Contact();
         }
         return new Contact(cursor);
     }
 
-    public int updateContact(Contact contact)
-    {
+    public ArrayList<Contact> getAllContacts() {
+        ArrayList<Contact> contactList = new ArrayList<>();
+        Cursor cursor = fetchAllContact();
+        do {
+            Contact contact = new Contact(cursor);
+            contactList.add(contact);
+        } while (cursor.moveToNext());
+        return contactList;
+    }
+
+    public int updateContact(Contact contact) {
         database = this.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
@@ -183,7 +197,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(DatabaseHelper.EMAIL, contact.getEmail());
         contentValues.put(DatabaseHelper.CONTACT_IMAGE_URI, contact.getImagePath());
 
-        String clause = DatabaseHelper._ID + " = " + contact.getContact_id();
+        String clause = DatabaseHelper._ID + " = " + contact.getContactId();
         return database.update(DatabaseHelper.CONTACT_TABLE_NAME, contentValues, clause, null);
     }
 
@@ -254,5 +268,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             cursor.moveToNext();
         }
         return messages;
+    }
+
+    public String getLastMessage(long contactId) {
+        Cursor cursor = fetchMessages(contactId);
+        if (cursor.getCount() == 0)
+            return "";
+        cursor.moveToLast();
+        return cursor.getString(1);
+    }
+
+    public ArrayList<ConversationItem> getAllConversation() {
+        ArrayList<ConversationItem> conversationItems = new ArrayList<>();
+        ArrayList<Contact> contacts = getAllContacts();
+        Log.d("getAllConversation", "contacts: " + contacts.size());
+        for (Contact contact : contacts) {
+            String lastMessage = getLastMessage(contact.getContactId());
+            if (lastMessage.isEmpty())
+                continue;
+            conversationItems.add(new ConversationItem(contact, lastMessage));
+        }
+        return conversationItems;
     }
 }

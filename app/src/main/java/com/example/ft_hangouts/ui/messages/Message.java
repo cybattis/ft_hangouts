@@ -15,6 +15,17 @@ public class Message {
     boolean isMe;
     long contactId;
 
+    public Message() {
+        this.id = -1;
+        this.message = "";
+        this.dateReceive = new Date();
+        this.dateSend = new Date();
+        this.status = 0;
+        this.errorCode = 0;
+        this.isMe = false;
+        this.contactId = -1;
+    }
+
     public Message(String message, Date dateReceive, Date dateSend, /*int status, int errorCode,*/ boolean isMe, long contactId) {
         this.id = -1;
         this.message = message;
@@ -68,5 +79,9 @@ public class Message {
 
     public long getContactId() {
         return contactId;
+    }
+
+    public boolean isValid() {
+        return id != -1;
     }
 }

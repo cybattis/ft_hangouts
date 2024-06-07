@@ -74,8 +74,8 @@ public class ContactPageActivity extends AppCompatActivity {
         callButton = binding.contactCallButton;
 
         contact = new Contact(getIntent());
-        if (contact.getContact_id() == -1) {
-            Log.e("ContactPageActivity", "No contact ID");
+        if (!contact.isValid()) {
+            Log.e("ContactPageActivity", "Invalid contact id");
             Intent intent = new Intent();
             intent.putExtra("error", true);
             setResult(RESULT_CANCELED, intent);
@@ -85,7 +85,7 @@ public class ContactPageActivity extends AppCompatActivity {
 
         binding.contactPageEditButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddContactActivity.class);
-            intent.putExtra("id", contact.getContact_id());
+            intent.putExtra("id", contact.getContactId());
             intent.putExtra("first_name", contact.getFirstName());
             intent.putExtra("last_name", contact.getLastName());
             intent.putExtra("phone_number", contact.getPhoneNumber());
@@ -104,7 +104,7 @@ public class ContactPageActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.putExtra("delete_contact", true);
 
-            int result = db.deleteContact(contact.getContact_id());
+            int result = db.deleteContact(contact.getContactId());
             if (result > 0) {
                 if (!imageUri.isEmpty())
                     Utils.removeImage(imageUri);
@@ -162,16 +162,13 @@ public class ContactPageActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         DatabaseHelper db = new DatabaseHelper(this);
-        contact = db.getContact(contact.getContact_id());
+        contact = db.getContact(contact.getContactId());
+        if (!contact.isValid())
+            finish();
         setContent();
     }
 
     void setContent() {
-        if (contact.getContact_id() == -1) {
-            Log.e("ContactPageActivity", "No id found");
-            finish();
-        }
-
         if (contact.getFirstName().isEmpty() && contact.getLastName().isEmpty())
             contactName.setVisibility(View.GONE);
         else {
@@ -188,7 +185,7 @@ public class ContactPageActivity extends AppCompatActivity {
             if (PhoneNumberUtils.isGlobalPhoneNumber(contact.getPhoneNumber())) {
                 messageButton.setOnClickListener(v -> {
                     Intent intent = new Intent(this, ConversationActivity.class);
-                    intent.putExtra("contact_id", contact.getContact_id());
+                    intent.putExtra("contact_id", contact.getContactId());
                     startActivity(intent);
                 });
 

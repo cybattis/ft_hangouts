@@ -84,7 +84,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE d MMMM", Locale.getDefault());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("mm:ss", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
 
         switch (holder.getItemViewType()) {
             case ME_MESSAGE:
@@ -102,7 +102,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Log.d("MessageAdapter", "Binding contact message");
                 ContactBubbleViewHolder contactMessage = (ContactBubbleViewHolder)holder;
                 // Date
-                contactMessage.date.setText(dateFormat.format(messages.get(position).dateSend));
+                contactMessage.date.setText(dateFormat.format(messages.get(position).dateReceive));
                 // Image
                 Uri uri = contact.getImageUri();
                 if (!uri.toString().isEmpty())
@@ -112,7 +112,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 // Message
                 contactMessage.message.setText(messages.get(position).message);
                 // Timestamp
-                contactMessage.timestamp.setText(timeFormat.format(messages.get(position).dateSend));
+                contactMessage.timestamp.setText(timeFormat.format(messages.get(position).dateReceive));
                 break;
         }
     }

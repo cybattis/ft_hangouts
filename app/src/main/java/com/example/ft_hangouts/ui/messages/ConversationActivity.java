@@ -3,7 +3,6 @@ package com.example.ft_hangouts.ui.messages;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +22,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 
 public class ConversationActivity extends AppCompatActivity {
 
@@ -43,18 +43,17 @@ public class ConversationActivity extends AppCompatActivity {
         binding = ActivityConversationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        db = new DatabaseHelper(this);
+        db = new DatabaseHelper(getApplicationContext());
 
         // Fetch contact from intent
         contact = db.getContact(getIntent().getLongExtra("contact_id", -1));
-        if (contact == null) {
-            Log.e("ConversationActivity", "Contact not found");
+        if (!contact.isValid()) {
+            Log.e("onCreate: ", "Invalid contact");
             finish();
-            return;
         }
 
         // Fetch messages from database
-        ArrayList<Message> messages = db.getMessages(contact.getContact_id());
+        ArrayList<Message> messages = db.getMessages(contact.getContactId());
         messageAdapter = new MessageAdapter(this, messages, contact);
 
         // Setup recycler view
@@ -62,12 +61,14 @@ public class ConversationActivity extends AppCompatActivity {
         messagesRV.setAdapter(messageAdapter);
         messagesRV.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         messagesRV.scrollToPosition(messageAdapter.getItemCount() - 1);
-        messagesRV.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            if (bottom < oldBottom) {
-                messagesRV.postDelayed(() -> messagesRV.smoothScrollToPosition(
-                        messagesRV.getAdapter().getItemCount() - 1),100);
-            }
-        });
+        if (messagesRV.getAdapter().getItemCount() > 0) {
+            messagesRV.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                if (bottom < oldBottom) {
+                    messagesRV.postDelayed(() -> messagesRV.smoothScrollToPosition(
+                            messagesRV.getAdapter().getItemCount() - 1), 100);
+                }
+            });
+        }
 
         // Setup toolbar
         CharSequence toolbarTitle = contact.getFullName().isEmpty() ? contact.getPhoneNumber() : contact.getFullName();
@@ -85,22 +86,40 @@ public class ConversationActivity extends AppCompatActivity {
         messageInput = binding.inputMessage;
         sendButton = binding.sendMessageButton;
         sendButton.setOnClickListener(v -> {
-            String message = messageInput.getText().toString();
-            if (message.isEmpty()) {
+            Optional<String> message = Optional.ofNullable(messageInput.getText()).map(CharSequence::toString);
+            if (!message.isPresent() || message.get().isEmpty())
                 return;
-            }
 
-//            // Send SMS
-//            SmsManager smsManager = SmsManager.getDefault();
-//            smsManager.sendTextMessage(contact.getPhoneNumber(), null, messageInput.getText().toString(), null, null);
-
-            Message newMessage = new Message(message, null, new Date(), true, contact.getContact_id());
+            Message newMessage = sendMessage(message.get());
             db.addMessage(newMessage);
             messageAdapter.addMessage(newMessage);
             messageAdapter.notifyItemInserted(messageAdapter.getItemCount() - 1);
             messageInput.setText("");
             messagesRV.scrollToPosition(messageAdapter.getItemCount() - 1);
         });
+    }
+
+    private Message sendMessage(String message) {
+        Message newMessage = null;
+
+        if (message.contains("/dev")) {
+            String[] parts = message.split(" ");
+            if (parts.length >= 2) {
+                StringBuilder messageToSend = new StringBuilder();
+                for (int i = 1; i < parts.length; i++) {
+                    messageToSend.append(parts[i]).append(" ");
+                    newMessage = new Message(messageToSend.toString(), new Date(), null, false, contact.getContactId());
+                }
+            }
+        }
+        else {
+//            // Send SMS
+//            SmsManager smsManager = SmsManager.getDefault();
+//            smsManager.sendTextMessage(contact.getPhoneNumber(), null, messageInput.getText().toString(), null, null);
+
+            newMessage = new Message(message, null, new Date(), true, contact.getContactId());
+        }
+        return newMessage;
     }
 
     @Override

@@ -46,7 +46,7 @@ public class AddContactActivity extends AppCompatActivity {
     ImageButton contactImageButton;
     Bitmap imageFile;
     int orientation;
-    String oldImage;
+    String oldImage = "";
 
     // Registers a photo picker activity launcher in single-select mode.
     private final ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
@@ -103,7 +103,7 @@ public class AddContactActivity extends AppCompatActivity {
         emailEditText = binding.inputEmailText;
 
         contact = new Contact(getIntent());
-        if (contact.getContact_id() >= 0)
+        if (contact.getContactId() >= 0)
             setUpdateActivity();
 
         binding.addButtonDb.setOnClickListener(v -> addButtonCallback());
@@ -151,7 +151,7 @@ public class AddContactActivity extends AppCompatActivity {
 
     private void addButtonCallback() {
         try {
-            DatabaseHelper db = new DatabaseHelper(this);
+            DatabaseHelper db = new DatabaseHelper(getApplicationContext());
 
             contact.setFirstName(firstNameEditText.getText().toString().trim());
             contact.setLastName(lastNameEditText.getText().toString().trim());
@@ -164,7 +164,7 @@ public class AddContactActivity extends AppCompatActivity {
             if (imageFile != null)
                 contact.setImageUri(copyImage(imageFile));
 
-            if (contact.getContact_id() == -1) {
+            if (!contact.isValid()) {
                 Log.d("addButtonCallback", "Add contact");
                 db.addContact(contact);
             }
@@ -172,6 +172,7 @@ public class AddContactActivity extends AppCompatActivity {
                 Log.d("addButtonCallback", "Update contact");
                 if (!Objects.equals(contact.getImagePath(), oldImage))
                     Utils.removeImage(oldImage);
+
                 if (db.updateContact(contact) == 0)
                     Log.e("addButtonCallback", "Failed to update contact");
             }

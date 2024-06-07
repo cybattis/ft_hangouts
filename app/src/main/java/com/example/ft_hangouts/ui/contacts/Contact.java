@@ -17,6 +17,18 @@ public class Contact {
     private String email;
     private String imageUri;
 
+    public Contact() {
+        this.contact_id = -1;
+        this.firstName = "";
+        this.lastName = "";
+        this.phoneNumber = "";
+        this.address = "";
+        this.city = "";
+        this.postalCode = "";
+        this.email = "";
+        this.imageUri = "";
+    }
+
     public Contact(Intent intent) {
         this.contact_id = intent.getLongExtra("id", -1);
         this.firstName = intent.getStringExtra("first_name") != null ? intent.getStringExtra("first_name") : "";
@@ -41,7 +53,11 @@ public class Contact {
         this.imageUri = cursor.getString(8);
     }
 
-    public long getContact_id() {
+    public boolean isValid() {
+        return contact_id != -1;
+    }
+
+    public long getContactId() {
         return contact_id;
     }
 

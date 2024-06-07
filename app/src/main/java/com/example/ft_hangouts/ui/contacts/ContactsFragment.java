@@ -2,7 +2,6 @@ package com.example.ft_hangouts.ui.contacts;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +27,7 @@ public class ContactsFragment extends Fragment {
     DatabaseHelper db;
     ContactAdapter contactAdapter;
     ArrayList<Contact> contactsListData;
-    RecyclerView contactListView;
+    RecyclerView contactRV;
 
     private final ActivityResultLauncher<Intent> contactPageActivity = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
@@ -54,7 +53,7 @@ public class ContactsFragment extends Fragment {
         binding = FragmentContactsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        contactListView = binding.contactsList;
+        contactRV = binding.contactsList;
 
         binding.newContactButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AddContactActivity.class);
@@ -68,13 +67,15 @@ public class ContactsFragment extends Fragment {
     }
 
     private void createContactList() {
-        contactsListData = new ArrayList<>();
-
-        fetchContact();
+        contactsListData = db.getAllContacts();
+        if (contactsListData.isEmpty()) {
+            Toast.makeText(getContext(), "No contacts found", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         contactAdapter = new ContactAdapter(getContext(), contactsListData, contactPageActivity);
         binding.contactsList.setAdapter(contactAdapter);
-        binding.contactsList.setLayoutManager(new LinearLayoutManager(ContactsFragment.this.getContext()));
+        binding.contactsList.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -96,17 +97,5 @@ public class ContactsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         createContactList();
-    }
-
-    void fetchContact() {
-        Cursor cursor = db.fetchAllContact();
-        if (cursor.getCount() == 0) {
-            Toast.makeText(getContext(), "No contact", Toast.LENGTH_SHORT).show();
-        } else {
-            do {
-                Contact contact = new Contact(cursor);
-                contactsListData.add(contact);
-            } while (cursor.moveToNext());
-        }
     }
 }

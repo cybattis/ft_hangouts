@@ -43,7 +43,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Log.d("onBindViewHolder: ", "Binding contact: " + contactsListData.get(position).getContact_id());
+        Log.d("onBindViewHolder: ", "Binding contact: " + contactsListData.get(position).getContactId());
 
         holder.contact_name_txt.setText(String.format("%s", contactsListData.get(position).getFullName()));
 
@@ -60,10 +60,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         }
 
         holder.mainLayout.setOnClickListener(v -> {
-            Log.d("onBindViewHolder: ", "Clicked on contact: " + contactsListData.get(position).getContact_id());
+            Log.d("onBindViewHolder: ", "Clicked on contact: " + contactsListData.get(position).getContactId());
 
             Intent intent = new Intent(context, ContactPageActivity.class);
-            intent.putExtra("id", contactsListData.get(position).getContact_id());
+            intent.putExtra("id", contactsListData.get(position).getContactId());
             intent.putExtra("first_name", contactsListData.get(position).getFirstName());
             intent.putExtra("last_name", contactsListData.get(position).getLastName());
             intent.putExtra("phone_number", contactsListData.get(position).getPhoneNumber());
@@ -91,7 +91,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             super(itemView);
             contact_name_txt = itemView.findViewById(R.id.contact_card_name);
             contact_image = itemView.findViewById(R.id.contact_image_button);
-            mainLayout = itemView.findViewById(R.id.mainLayout);
+            mainLayout = itemView.findViewById(R.id.conversation_main_layout);
         }
     }
 }
