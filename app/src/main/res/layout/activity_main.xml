@@ -8,7 +8,9 @@
 
     <include
         android:id="@+id/main_toolbar"
-        layout="@layout/main_toolbar" />
+        layout="@layout/main_toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"

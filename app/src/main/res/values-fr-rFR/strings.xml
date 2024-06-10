@@ -1,15 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ft_hangouts</string>
     <string name="title_messages">Messages</string>
     <string name="title_keypad">Clavier</string>
-    <string name="title_contacts">Contactes</string>
+    <string name="title_contacts">Contacts</string>
     <string name="title_settings">Parametres</string>
     <string name="text_add_contact">Nouveau contact</string>
-    <string name="empty_contact_list">Aucun contactes !</string>
-    <string name="update_button">Modifier</string>
-    <string name="text_first_name">Prenom</string>
+    <string name="update_button">Mettre à jour</string>
+    <string name="text_first_name">Prénom</string>
     <string name="text_last_name">Nom</string>
-    <string name="text_phone_number">Numero</string>
-    <string name="title_update_contact">Modifier contacte</string>
+    <string name="text_phone_number">Numéro</string>
+    <string name="title_update_contact">Mettre contact</string>
+    <string name="text_edit_contact">Editer contact</string>
+    <string name="text_add">Ajouter</string>
+    <string name="text_address">Adresse</string>
+    <string name="text_zip_code">Code postal</string>
+    <string name="text_city">Ville</string>
+    <string name="text_email">Email</string>
+    <string name="text_contact_picture_description">Image de contact</string>
+    <string name="text_theme">Theme</string>
+    <string name="text_contact_name">Nom contact</string>
+    <string name="text_save">Sauvegarder</string>
+    <string name="text_contact">Contact</string>
+    <string name="add_conversation_text">Ajouter une conversation</string>
+    <string name="text_last_message">Dernier message</string>
+    <string name="delete_contact_button_text">Supprimer un contact</string>
+    <string name="address_icon_text">Logo adresse</string>
+    <string name="delete_contact_confirmation">Supprimer contact</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="send_text">Envoyer</string>
+    <string name="go_to_conversation_text">Aller aux conversations</string>
+    <string name="call_contact">Appeler contact</string>
+    <string name="message">Message</string>
+    <string name="phone_number">Numéro</string>
 </resources>

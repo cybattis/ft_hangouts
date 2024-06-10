@@ -131,7 +131,7 @@ public class AddContactActivity extends AppCompatActivity {
     // ========================================================================
     void setUpdateActivity() {
 
-        setTitle(getResources().getString(R.string.title_update_contact));
+        setTitle(getResources().getString(R.string.text_edit_contact));
         binding.addButtonDb.setText(getResources().getString(R.string.update_button));
 
         firstNameEditText.setText(contact.getFirstName());

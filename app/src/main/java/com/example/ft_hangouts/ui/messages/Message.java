@@ -8,8 +8,8 @@ import java.util.Date;
 public class Message {
     long id;
     String message;
-    Date dateReceive;
-    Date dateSend;
+    long dateReceive;
+    long dateSend;
     int status;
     int errorCode;
     boolean isMe;
@@ -18,15 +18,15 @@ public class Message {
     public Message() {
         this.id = -1;
         this.message = "";
-        this.dateReceive = new Date();
-        this.dateSend = new Date();
+        this.dateReceive = 0;
+        this.dateSend = 0;
         this.status = 0;
         this.errorCode = 0;
         this.isMe = false;
         this.contactId = -1;
     }
 
-    public Message(String message, Date dateReceive, Date dateSend, /*int status, int errorCode,*/ boolean isMe, long contactId) {
+    public Message(String message, long dateReceive, long dateSend, /*int status, int errorCode,*/ boolean isMe, long contactId) {
         this.id = -1;
         this.message = message;
         this.dateReceive = dateReceive;
@@ -40,8 +40,8 @@ public class Message {
     public Message(Cursor cursor) {
         this.id = cursor.getLong(0);
         this.message = cursor.getString(1);
-        this.dateReceive = new Date(cursor.getLong(2));
-        this.dateSend = new Date(cursor.getLong(3));
+        this.dateReceive = cursor.getLong(2);
+        this.dateSend = cursor.getLong(3);
         this.status = cursor.getInt(4);
         this.errorCode = cursor.getInt(5);
         this.isMe = cursor.getInt(6) == 1;
@@ -58,10 +58,18 @@ public class Message {
     }
 
     public Date getDateReceive() {
-        return dateReceive;
+        return new Date(dateReceive);
     }
 
     public Date getDateSend() {
+        return new Date(dateSend);
+    }
+
+    public long getDateReceiveUnix() {
+        return dateReceive;
+    }
+
+    public long getDateSendUnix() {
         return dateSend;
     }
 

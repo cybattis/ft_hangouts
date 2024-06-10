@@ -44,7 +44,7 @@
                     android:id="@+id/contact_page_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="@string/contact_image_description"
+                    android:contentDescription="@string/text_contact_picture_description"
                     android:foregroundGravity="top"
                     android:src="@drawable/default_user"
                     tools:layout_conversion_absoluteHeight="200dp"

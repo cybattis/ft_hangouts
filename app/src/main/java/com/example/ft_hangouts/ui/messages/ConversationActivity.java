@@ -108,7 +108,7 @@ public class ConversationActivity extends AppCompatActivity {
                 StringBuilder messageToSend = new StringBuilder();
                 for (int i = 1; i < parts.length; i++) {
                     messageToSend.append(parts[i]).append(" ");
-                    newMessage = new Message(messageToSend.toString(), new Date(), null, false, contact.getContactId());
+                    newMessage = new Message(messageToSend.toString(), new Date().getTime(), 0, false, contact.getContactId());
                 }
             }
         }
@@ -117,7 +117,7 @@ public class ConversationActivity extends AppCompatActivity {
 //            SmsManager smsManager = SmsManager.getDefault();
 //            smsManager.sendTextMessage(contact.getPhoneNumber(), null, messageInput.getText().toString(), null, null);
 
-            newMessage = new Message(message, null, new Date(), true, contact.getContactId());
+            newMessage = new Message(message, 0, new Date().getTime(), true, contact.getContactId());
         }
         return newMessage;
     }

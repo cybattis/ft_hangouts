@@ -56,7 +56,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         else
             holder.contactImage.setImageResource(R.drawable.default_user);
 
-        holder.lastMessage.setText(conversationItems.get(position).getLastMessage());
+        String lastMessage = conversationItems.get(position).getLastMessage();
+        if (lastMessage.length() > 20)
+            holder.lastMessage.setText(String.format("%s...", lastMessage.substring(0, 30)));
+        else
+            holder.lastMessage.setText(lastMessage);
 
         holder.conversationRow.setOnClickListener(v -> {
             Intent intent = new Intent(context, ConversationActivity.class);

@@ -69,8 +69,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + MESSAGES_TABLE_NAME + " ("
             + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + MESSAGE + " TEXT, "
-            + DATE_RECEIVE + " TEXT, "
-            + DATE_SEND + " TEXT, "
+            + DATE_RECEIVE + " INTERGER, "
+            + DATE_SEND + " INTERGER, "
             + STATUS + " INTEGER, "
             + ERROR_CODE + " INTEGER, "
             + IS_ME + " BOOLEAN, "
@@ -177,10 +177,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<Contact> getAllContacts() {
         ArrayList<Contact> contactList = new ArrayList<>();
         Cursor cursor = fetchAllContact();
-        do {
+        for (int i = 0; i < cursor.getCount(); i++) {
             Contact contact = new Contact(cursor);
             contactList.add(contact);
-        } while (cursor.moveToNext());
+            cursor.moveToNext();
+        }
         return contactList;
     }
 
@@ -215,12 +216,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues cv = new ContentValues();
         cv.put(MESSAGE, message.getMessage());
-
-        String dateReceive = message.getDateReceive() == null ? "" : message.getDateReceive().toString();
-        cv.put(DATE_RECEIVE, dateReceive);
-
-        String dateSend = message.getDateSend() == null ? "" : message.getDateSend().toString();
-        cv.put(DATE_SEND, dateSend);
+        cv.put(DATE_RECEIVE, message.getDateReceiveUnix());
+        cv.put(DATE_SEND, message.getDateSendUnix());
         cv.put(STATUS, 0);
         cv.put(ERROR_CODE, 0);
         cv.put(IS_ME, message.isMe() ? 1 : 0);
