@@ -45,7 +45,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Log.d("onBindViewHolder: ", "Binding contact: " + contactsListData.get(position).getContactId());
 
-        holder.contact_name_txt.setText(String.format("%s", contactsListData.get(position).getFullName()));
+        String displayedName = contactsListData.get(position).hasName()
+                ? contactsListData.get(position).getFullName() : contactsListData.get(position).getPhoneNumber();
+        holder.contact_name_txt.setText(String.format("%s", displayedName));
 
         try {
             Uri uri = contactsListData.get(position).getImageUri();

@@ -44,10 +44,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public void onBindViewHolder(@NonNull ConversationViewHolder holder, int position) {
         Contact contact = conversationItems.get(position).getContact();
 
-        String name = contact.getFullName();
-        if (name.isEmpty())
-            name = contact.getPhoneNumber();
-        holder.name.setText(name);
+        String displayedName = contact.hasName()
+                ? contact.getFullName() : contact.getPhoneNumber();
+        holder.name.setText(displayedName);
 
         Uri uri = contact.getImageUri();
         Log.d("onBindViewHolder: ", "Image found: " + uri.toString());

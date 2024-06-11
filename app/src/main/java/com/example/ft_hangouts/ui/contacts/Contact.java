@@ -143,6 +143,10 @@ public class Contact {
         return firstName + " " + lastName;
     }
 
+    public boolean hasName() {
+        return !firstName.isEmpty() && !lastName.isEmpty();
+    }
+
     public String getFullAddress() {
         return address + ", " + city + ", " + postalCode;
     }

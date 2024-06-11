@@ -1,15 +1,13 @@
 package com.example.ft_hangouts.ui.messages;
 
 import android.os.Bundle;
-import android.telephony.SmsMessage;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,7 +38,7 @@ public class MessagesFragment extends Fragment {
     }
 
     private void createConversationList() {
-        conversationItems = db.getAllConversation();
+        conversationItems = db.getAllConversations();
         Log.d("createConversationList: ", conversationItems.size() + " conversations found");
         conversationAdapter = new ConversationAdapter(getContext(), conversationItems);
         conversationRV.setAdapter(conversationAdapter);

@@ -1,15 +1,22 @@
 package com.example.ft_hangouts;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -21,8 +28,11 @@ import com.example.ft_hangouts.ui.settings.SettingsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
+    private static final int PERMISSION_REQUEST_RECEIVE_SMS = 124;
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
+    private SmsListener SmsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Observe the lifecycle of the app
         ProcessLifecycleOwner.get().getLifecycle().addObserver(new LifecycleListener(this));
+
+        checkForSmsReceivePermissions();
+
+        // Register SMS listener
+        SmsListener = new SmsListener(this);
+        registerReceiver(SmsListener, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
 
     @Override
@@ -61,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_settings) {
-            Log.d("MainActivity", "Settings clicked");
-            // Navigate to settings activity
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
@@ -73,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("MainActivity", "onPause");
     }
 
     @Override
@@ -85,8 +98,6 @@ public class MainActivity extends AppCompatActivity {
             prefs.edit().remove("theme_changed").apply();
             recreate();
         }
-
-        Log.d("MainActivity", "onResume");
     }
 
     @Override
@@ -94,5 +105,30 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    void checkForSmsReceivePermissions() {
+        // Check if App already has permissions for receiving SMS
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED) {
+            // App has permissions to listen incoming SMS messages
+            Log.d(TAG, "checkForSmsReceivePermissions: Allowed");
+        } else {
+            // App don't have permissions to listen incoming SMS messages
+            Log.d(TAG, "checkForSmsReceivePermissions: Denied");
+            // Request permissions from user
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.RECEIVE_SMS}, PERMISSION_REQUEST_RECEIVE_SMS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST_RECEIVE_SMS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                Toast.makeText(getApplicationContext(), "Permission granted to read sms.", Toast.LENGTH_LONG).show();
+            else
+                Toast.makeText(getApplicationContext(), "No permission to read sms.", Toast.LENGTH_LONG).show();
+        }
     }
 }

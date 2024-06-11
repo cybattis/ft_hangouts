@@ -103,7 +103,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // CONTACTS
     // =============================================
 
-    public void addContact(Contact contact) {
+    public long addContact(Contact contact) {
         database = this.getWritableDatabase();
 
         Log.d("DatabaseHelper", "Adding contact: " + contact);
@@ -123,6 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Fail to add contact", Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(context, "Contact added successfully", Toast.LENGTH_SHORT).show();
+        return result;
     }
 
     public Cursor fetchAllContact() {
@@ -174,6 +175,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return new Contact(cursor);
     }
 
+    public Contact getContact(String phoneNumber) {
+        database = this.getReadableDatabase();
+        Cursor cursor = database.query(
+                CONTACT_TABLE_NAME,
+                new String[]{_ID},
+                PHONE_NUMBER + " = ?",
+                new String[]{phoneNumber},
+                null, null, null
+        );
+        if (cursor.getCount() == 0) {
+            Log.e("getContact", "Contact not found");
+            return new Contact();
+        }
+        cursor.moveToFirst();
+        Contact contact = getContact(cursor.getLong(0));
+        cursor.close();
+        return contact;
+    }
+
     public ArrayList<Contact> getAllContacts() {
         ArrayList<Contact> contactList = new ArrayList<>();
         Cursor cursor = fetchAllContact();
@@ -211,7 +231,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // MESSAGES
     // =============================================
 
-    public void addMessage(Message message) {
+    public boolean addMessage(Message message) {
         database = this.getWritableDatabase();
 
         ContentValues cv = new ContentValues();
@@ -224,8 +244,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(CONTACT_ID, message.getContactId());
 
         long result = database.insert(MESSAGES_TABLE_NAME, null, cv);
-        if (result == -1)
+        if (result == -1) {
             Toast.makeText(context, "Fail to add message", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     public Cursor fetchMessages(long id) {
@@ -275,7 +298,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor.getString(1);
     }
 
-    public ArrayList<ConversationItem> getAllConversation() {
+    public ArrayList<ConversationItem> getAllConversations() {
         ArrayList<ConversationItem> conversationItems = new ArrayList<>();
         ArrayList<Contact> contacts = getAllContacts();
         Log.d("getAllConversation", "contacts: " + contacts.size());
