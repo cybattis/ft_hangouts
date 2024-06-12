@@ -25,7 +25,7 @@
         android:theme="@style/Theme.Ft_hangouts">
 
         <receiver
-            android:name=".SmsListener"
+            android:name=".listener.SmsListener"
             android:exported="false"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="1000">

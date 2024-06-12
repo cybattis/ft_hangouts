@@ -35,6 +35,6 @@
     <string name="call_contact">Call contact</string>
     <string name="message">Message</string>
     <string name="phone_number">Phone number</string>
-    <string name="rotate_screen">Rotate screen</string>
+    <string name="no_contact">No contact</string>
 
 </resources>

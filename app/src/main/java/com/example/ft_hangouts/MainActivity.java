@@ -11,7 +11,6 @@ import android.provider.Telephony;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +23,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.ft_hangouts.databinding.ActivityMainBinding;
+import com.example.ft_hangouts.listener.LifecycleListener;
+import com.example.ft_hangouts.listener.SmsListener;
+import com.example.ft_hangouts.permission.PermissionHandler;
 import com.example.ft_hangouts.ui.settings.SettingsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_RECEIVE_SMS = 124;
     private ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
-    private SmsListener SmsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
         checkForSmsReceivePermissions();
 
         // Register SMS listener
-        SmsListener = new SmsListener(this);
-        registerReceiver(SmsListener, new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
+        registerReceiver(new SmsListener(), new IntentFilter(Telephony.Sms.Intents.SMS_RECEIVED_ACTION));
     }
 
     @Override
@@ -107,19 +107,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void checkForSmsReceivePermissions() {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED) {
+        if(PermissionHandler.isPermissionGranted(this, Manifest.permission.RECEIVE_SMS)) {
             Log.d(TAG, "checkForSmsReceivePermissions: Allowed");
-        } else {
-            Log.d(TAG, "checkForSmsReceivePermissions: Denied");
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.RECEIVE_SMS}, PERMISSION_REQUEST_RECEIVE_SMS);
-        }
+        } else
+            PermissionHandler.requestReceiveSmsPermission(this);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == PERMISSION_REQUEST_RECEIVE_SMS) {
+        if (requestCode == PermissionHandler.PERMISSION_REQUEST_RECEIVE_SMS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 Log.d(TAG, "onRequestPermissionsResult: Permission granted.");
             else

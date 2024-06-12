@@ -1,4 +1,4 @@
-package com.example.ft_hangouts;
+package com.example.ft_hangouts.listener;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -12,20 +12,16 @@ import android.util.Log;
 import androidx.core.content.ContextCompat;
 
 import com.example.ft_hangouts.database.DatabaseHelper;
+import com.example.ft_hangouts.permission.PermissionHandler;
 import com.example.ft_hangouts.ui.contacts.Contact;
 import com.example.ft_hangouts.ui.messages.Message;
 
 public class SmsListener extends BroadcastReceiver {
     private static final String TAG = "SmsListener";
-    private Context context;
-
-    public SmsListener(Context context) {
-        this.context = context;
-    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (!isSmsReadPermissionGranted()) {
+        if (!PermissionHandler.isPermissionGranted(context, Manifest.permission.READ_SMS)) {
             Log.w(TAG, "SMS read permission not granted");
             return;
         }
@@ -59,9 +55,5 @@ public class SmsListener extends BroadcastReceiver {
                 }
             }
         }
-    }
-
-    public boolean isSmsReadPermissionGranted() {
-        return ContextCompat.checkSelfPermission(context, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
     }
 }

@@ -25,6 +25,7 @@ import com.example.ft_hangouts.R;
 import com.example.ft_hangouts.Utils;
 import com.example.ft_hangouts.database.DatabaseHelper;
 import com.example.ft_hangouts.databinding.ActivityContactPageBinding;
+import com.example.ft_hangouts.permission.PermissionHandler;
 import com.example.ft_hangouts.ui.contacts.Contact;
 import com.example.ft_hangouts.ui.contacts.addContact.AddContactActivity;
 import com.example.ft_hangouts.ui.messages.ConversationActivity;
@@ -137,22 +138,25 @@ public class ContactPageActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSIONS_REQUEST_CALL_PHONE) {
+        if (requestCode == PermissionHandler.PERMISSION_REQUEST_CALL_PHONE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "Permission granted");
-                callAction();
+                callAction(contact.getPhoneNumber());
+            } else
+                Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+        }
+        if (requestCode == PermissionHandler.PERMISSION_REQUEST_READ_SMS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "Permission granted");
+                openConversation();
             } else
                 Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public  boolean isPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void callAction() {
+    private void callAction(String phoneNumber) {
         Intent intent = new Intent(Intent.ACTION_CALL);
-        intent.setData(Uri.parse("tel:" + contact.getPhoneNumber()));
+        intent.setData(Uri.parse("tel:" + phoneNumber));
         startActivity(intent);
     }
 
@@ -181,18 +185,8 @@ public class ContactPageActivity extends AppCompatActivity {
             callButton.setVisibility(View.VISIBLE);
 
             if (PhoneNumberUtils.isGlobalPhoneNumber(contact.getPhoneNumber())) {
-                messageButton.setOnClickListener(v -> {
-                    Intent intent = new Intent(this, ConversationActivity.class);
-                    intent.putExtra("contact_id", contact.getContactId());
-                    startActivity(intent);
-                });
-
-                callButton.setOnClickListener(v -> {
-                    if (isPermissionGranted())
-                        callAction();
-                    else
-                        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CALL_PHONE);
-                });
+                messageButton.setOnClickListener(v -> messageCallback());
+                callButton.setOnClickListener(v -> callCallback());
             }
             else {
                 messageButton.setActivated(false);
@@ -242,5 +236,25 @@ public class ContactPageActivity extends AppCompatActivity {
             contactImage.setImageURI(contact.getImageUri());
         else
             contactImage.setImageResource(R.drawable.default_user);
+    }
+
+    private void messageCallback() {
+        if (PermissionHandler.isPermissionGranted(this, android.Manifest.permission.READ_SMS))
+            openConversation();
+        else
+            PermissionHandler.requestReadSmsPermission(this);
+    }
+
+    private void openConversation() {
+        Intent intent = new Intent(this, ConversationActivity.class);
+        intent.putExtra("contact_id", contact.getContactId());
+        startActivity(intent);
+    }
+
+    private void callCallback() {
+        if (PermissionHandler.isPermissionGranted(this, android.Manifest.permission.CALL_PHONE))
+            callAction(contact.getPhoneNumber());
+        else
+            PermissionHandler.requestCallPermission(this);
     }
 }

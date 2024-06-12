@@ -121,8 +121,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = database.insert(CONTACT_TABLE_NAME, null, cv);
         if (result == -1)
             Toast.makeText(context, "Fail to add contact", Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(context, "Contact added successfully", Toast.LENGTH_SHORT).show();
         return result;
     }
 

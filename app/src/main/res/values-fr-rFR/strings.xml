@@ -33,4 +33,5 @@
     <string name="call_contact">Appeler contact</string>
     <string name="message">Message</string>
     <string name="phone_number">Numéro</string>
+    <string name="no_contact">Aucun contact</string>
 </resources>

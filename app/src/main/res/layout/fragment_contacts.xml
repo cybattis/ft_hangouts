@@ -7,6 +7,16 @@
         android:paddingTop="?attr/actionBarSize"
         tools:context=".ui.contacts.ContactsFragment" >
 
+    <TextView
+        android:id="@+id/no_contact_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_contact"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/contacts_list" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/new_contact_button"
         android:layout_width="wrap_content"

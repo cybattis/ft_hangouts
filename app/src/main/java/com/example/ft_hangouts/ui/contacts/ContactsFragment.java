@@ -36,7 +36,7 @@ public class ContactsFragment extends Fragment {
                 return;
             if (result.getResultCode() == Activity.RESULT_OK) {
                 if (result.getData().getBooleanExtra("delete_contact", false))
-                    Toast.makeText(getContext(), "Contact deleted successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Contact deleted", Toast.LENGTH_SHORT).show();
             }
             else if (result.getResultCode() == Activity.RESULT_CANCELED) {
                 if (result.getData().getBooleanExtra("delete_contact", false))
@@ -47,14 +47,12 @@ public class ContactsFragment extends Fragment {
         }
     );
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentContactsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         contactRV = binding.contactsList;
-
+        binding.noContactTextView.setVisibility(View.GONE);
         binding.newContactButton.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AddContactActivity.class);
             startActivity(intent);
@@ -69,7 +67,7 @@ public class ContactsFragment extends Fragment {
     private void createContactList() {
         contactsListData = db.getAllContacts();
         if (contactsListData.isEmpty()) {
-            Toast.makeText(getContext(), "No contacts found", Toast.LENGTH_SHORT).show();
+            binding.noContactTextView.setVisibility(View.VISIBLE);
             return;
         }
 
