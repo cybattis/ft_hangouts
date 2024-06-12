@@ -94,18 +94,18 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case ME_MESSAGE:
                 Log.d(TAG, "Binding me message");
                 MeMessageViewHolder meMessage = (MeMessageViewHolder)holder;
+
                 // Date
-                if (compareMessageDate(position, messages.get(position).dateSend))
+                meMessage.date.setText(dateFormat.format(messages.get(position).timestamp));
+                if (compareMessageDate(position, messages.get(position).timestamp))
                     meMessage.date.setVisibility(View.VISIBLE);
                 else
                     meMessage.date.setVisibility(View.GONE);
 
-                meMessage.date.setText(dateFormat.format(messages.get(position).dateSend));
                 // Message
                 meMessage.message.setText(messages.get(position).message);
                 // Timestamp
-                String meDate = timeFormat.format(new Date(messages.get(position).dateSend));
-                meMessage.timestamp.setText(meDate);
+                meMessage.timestamp.setText(timeFormat.format(new Date(messages.get(position).timestamp)));
                 break;
 
             case CONTACT_MESSAGE:
@@ -113,11 +113,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 ContactBubbleViewHolder contactMessage = (ContactBubbleViewHolder)holder;
 
                 // Date
-                if (compareMessageDate(position, messages.get(position).dateReceive))
+                contactMessage.date.setText(dateFormat.format(messages.get(position).timestamp));
+                if (compareMessageDate(position, messages.get(position).timestamp))
                     contactMessage.date.setVisibility(View.VISIBLE);
                 else
                     contactMessage.date.setVisibility(View.GONE);
-                contactMessage.date.setText(dateFormat.format(messages.get(position).dateReceive));
                 // Image
                 Uri uri = contact.getImageUri();
                 if (!uri.toString().isEmpty())
@@ -127,7 +127,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 // Message
                 contactMessage.message.setText(messages.get(position).message);
                 // Timestamp
-                String contactDate = timeFormat.format(new Date(messages.get(position).dateReceive));
+                String contactDate = timeFormat.format(new Date(messages.get(position).timestamp));
                 contactMessage.timestamp.setText(contactDate);
                 break;
         }
@@ -141,11 +141,9 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Calendar prevDate = Calendar.getInstance();
 
         date.setTimeInMillis(timeToCompare);
-        long prevDateTime = messages.get(position - 1).dateReceive;
+        long prevDateTime = messages.get(position - 1).timestamp;
         if (prevDateTime != 0)
             prevDate.setTimeInMillis(prevDateTime);
-        else
-            prevDate.setTimeInMillis(messages.get(position - 1).dateSend);
 
         return date.get(Calendar.DAY_OF_WEEK) != prevDate.get(Calendar.DAY_OF_WEEK);
     }

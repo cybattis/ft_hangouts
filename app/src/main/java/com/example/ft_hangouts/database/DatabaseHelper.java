@@ -32,10 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Message table columns
     private static final String MESSAGE = "message";
-    private static final String DATE_RECEIVE = "date_receive";
-    private static final String DATE_SEND = "date_send";
-    private static final String STATUS = "status";
-    private static final String ERROR_CODE = "error_code";
+    private static final String TIMESTAMP = "date_receive";
     private static final String IS_ME = "is_me";
     private static final String CONTACT_ID = "contact_id";
 
@@ -69,10 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + MESSAGES_TABLE_NAME + " ("
             + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + MESSAGE + " TEXT, "
-            + DATE_RECEIVE + " INTERGER, "
-            + DATE_SEND + " INTERGER, "
-            + STATUS + " INTEGER, "
-            + ERROR_CODE + " INTEGER, "
+            + TIMESTAMP + " INTERGER, "
             + IS_ME + " BOOLEAN, "
             + CONTACT_ID + " INTEGER NOT NULL, "
             + "FOREIGN KEY(" + CONTACT_ID + ") REFERENCES " + CONTACT_TABLE_NAME + "(" + _ID + "));";
@@ -234,10 +228,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues cv = new ContentValues();
         cv.put(MESSAGE, message.getMessage());
-        cv.put(DATE_RECEIVE, message.getDateReceiveUnix());
-        cv.put(DATE_SEND, message.getDateSendUnix());
-        cv.put(STATUS, 0);
-        cv.put(ERROR_CODE, 0);
+        cv.put(TIMESTAMP, message.getTimestamp());
         cv.put(IS_ME, message.isMe() ? 1 : 0);
         cv.put(CONTACT_ID, message.getContactId());
 
@@ -253,10 +244,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] columns = new String[] {
                 DatabaseHelper._ID,
                 DatabaseHelper.MESSAGE,
-                DatabaseHelper.DATE_RECEIVE,
-                DatabaseHelper.DATE_SEND,
-                DatabaseHelper.STATUS,
-                DatabaseHelper.ERROR_CODE,
+                DatabaseHelper.TIMESTAMP,
                 DatabaseHelper.IS_ME,
                 DatabaseHelper.CONTACT_ID
         };

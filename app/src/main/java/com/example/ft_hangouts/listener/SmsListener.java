@@ -46,9 +46,13 @@ public class SmsListener extends BroadcastReceiver {
                     Contact contact = new Contact();
                     contact.setPhoneNumber(smsMessage.getOriginatingAddress());
                     contactId = db.addContact(contact);
+
                     // add message
-                    Message message = new Message(smsMessage.getMessageBody(), smsMessage.getTimestampMillis(), 0, false, contactId);
-                    db.addMessage(message);
+                    Message message = new Message(smsMessage.getMessageBody(), smsMessage.getTimestampMillis(), false, contactId);
+                    if (!db.addMessage(message)) {
+                        Log.e(TAG, "Failed to add message to database");
+                        return ;
+                    }
 
                     conversationIntent.putExtra("contact_id", contactId);
                     context.sendBroadcast(conversationIntent);
@@ -56,8 +60,11 @@ public class SmsListener extends BroadcastReceiver {
                 else {
                     Log.d(TAG, "Contact found for phone number: " + smsMessage.getOriginatingAddress() + ", broadcasting message");
 
-                    Message message = new Message(smsMessage.getMessageBody(), smsMessage.getTimestampMillis(), 0, false, contactId);
-                    db.addMessage(message);
+                    Message message = new Message(smsMessage.getMessageBody(), smsMessage.getTimestampMillis(), false, contactId);
+                    if (!db.addMessage(message)) {
+                        Log.e(TAG, "Failed to add message to database");
+                        return;
+                    }
 
                     conversationIntent.putExtra("message", smsMessage.getMessageBody());
                     conversationIntent.putExtra("contact_id", contactId);
