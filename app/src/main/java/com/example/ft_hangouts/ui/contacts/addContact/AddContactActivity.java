@@ -1,11 +1,13 @@
 package com.example.ft_hangouts.ui.contacts.addContact;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
@@ -161,12 +163,25 @@ public class AddContactActivity extends AppCompatActivity {
             contact.setPostalCode(postalCodeEditText.getText().toString().trim());
             contact.setEmail(emailEditText.getText().toString().trim());
 
+            if (!contact.hasName() && !contact.hasPhoneNumber()) {
+                Toast.makeText(getApplicationContext(), "Name or phone number is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (imageFile != null)
                 contact.setImageUri(copyImage(imageFile));
 
             if (!contact.isValid()) {
                 Log.d("addButtonCallback", "Add contact");
-                db.addContact(contact);
+
+                Intent intent = new Intent();
+                if (db.addContact(contact) == -1) {
+                    Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_CANCELED, intent);
+                }
+                else
+                    setResult(RESULT_OK, intent);
+                finish();
             }
             else {
                 Log.d("addButtonCallback", "Update contact");

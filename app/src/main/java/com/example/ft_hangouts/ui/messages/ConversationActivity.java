@@ -29,6 +29,7 @@ import com.example.ft_hangouts.Utils;
 import com.example.ft_hangouts.database.DatabaseHelper;
 import com.example.ft_hangouts.databinding.ActivityConversationBinding;
 import com.example.ft_hangouts.databinding.FragmentMessagesBinding;
+import com.example.ft_hangouts.permission.PermissionHandler;
 import com.example.ft_hangouts.ui.contacts.Contact;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -39,8 +40,6 @@ import java.util.Optional;
 
 public class ConversationActivity extends AppCompatActivity {
     private static final String TAG = "ConversationActivity";
-    private static final int PERMISSION_REQUEST_SEND_SMS = 123;
-    private static final int PERMISSION_REQUEST_READ_SMS = 124;
     private ActivityConversationBinding binding;
     private DatabaseHelper db;
     Contact contact;
@@ -112,18 +111,14 @@ public class ConversationActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean isSmsSendPermissionGranted() {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED;
-    }
-
     private Boolean sendSms() {
         Optional<String> message = Optional.ofNullable(messageInput.getText()).map(CharSequence::toString);
         if (!message.isPresent() || message.get().isEmpty())
             return false;
 
-        if (!isSmsSendPermissionGranted()) {
+        if (!PermissionHandler.isPermissionGranted(getApplicationContext(), Manifest.permission.SEND_SMS)) {
             Log.d("sendSms: ", "Requesting permission to send sms");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, PERMISSION_REQUEST_SEND_SMS);
+            PermissionHandler.requestSendSmsPermission(this);
         }
         else {
             SmsManager smsManager = SmsManager.getDefault();
@@ -149,7 +144,7 @@ public class ConversationActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == PERMISSION_REQUEST_SEND_SMS) {
+        if (requestCode == PermissionHandler.PERMISSION_REQUEST_SEND_SMS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (sendSms())
                     Log.i(TAG, "SMS send successfully");

@@ -154,4 +154,8 @@ public class Contact {
     public String getFullContact() {
         return getFullName() + "\n" + phoneNumber + "\n" + getFullAddress() + "\n" + email + "\n" + imageUri;
     }
+
+    public boolean hasPhoneNumber() {
+        return !phoneNumber.isEmpty();
+    }
 }
