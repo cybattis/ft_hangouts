@@ -26,7 +26,7 @@ public class SmsListener extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (!isSmsReadPermissionGranted()) {
-            Log.d(TAG, "SMS read permission not granted");
+            Log.w(TAG, "SMS read permission not granted");
             return;
         }
 
@@ -38,23 +38,23 @@ public class SmsListener extends BroadcastReceiver {
 
                 long contactId = db.getContact(smsMessage.getOriginatingAddress()).getContactId();
                 if (contactId == -1) {
-                    Log.d(TAG, "Contact not found for phone number: " + smsMessage.getOriginatingAddress());
+                    Log.d(TAG, "Contact not found for phone number: " + smsMessage.getOriginatingAddress() + ", creating new contact");
+
                     // create new contact
                     Contact contact = new Contact();
                     contact.setPhoneNumber(smsMessage.getOriginatingAddress());
                     contactId = db.addContact(contact);
+                    // add message
                     Message message = new Message(smsMessage.getMessageBody(), smsMessage.getTimestampMillis(), 0, false, contactId);
                     db.addMessage(message);
                 }
                 else {
-                    Log.d(TAG, "Contact found for phone number: " + smsMessage.getOriginatingAddress());
+                    Log.d(TAG, "Contact found for phone number: " + smsMessage.getOriginatingAddress() + ", broadcasting message");
 
-                    Intent conversationIntent = new Intent("smsBroadCast" + contactId);
-                    //put whatever data you want to send, if any
-                    intent.putExtra("message", smsMessage.getMessageBody());
-                    intent.putExtra("contact_id", contactId);
-                    intent.putExtra("timestamp", smsMessage.getTimestampMillis());
-                    //send broadcast
+                    Intent conversationIntent = new Intent("smsBroadCast");
+                    conversationIntent.putExtra("message", smsMessage.getMessageBody());
+                    conversationIntent.putExtra("contact_id", contactId);
+                    conversationIntent.putExtra("timestamp", smsMessage.getTimestampMillis());
                     context.sendBroadcast(conversationIntent);
                 }
             }

@@ -103,19 +103,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 
     void checkForSmsReceivePermissions() {
-        // Check if App already has permissions for receiving SMS
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED) {
-            // App has permissions to listen incoming SMS messages
             Log.d(TAG, "checkForSmsReceivePermissions: Allowed");
         } else {
-            // App don't have permissions to listen incoming SMS messages
             Log.d(TAG, "checkForSmsReceivePermissions: Denied");
-            // Request permissions from user
             ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.RECEIVE_SMS}, PERMISSION_REQUEST_RECEIVE_SMS);
         }
     }
@@ -126,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == PERMISSION_REQUEST_RECEIVE_SMS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(getApplicationContext(), "Permission granted to read sms.", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onRequestPermissionsResult: Permission granted.");
             else
-                Toast.makeText(getApplicationContext(), "No permission to read sms.", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onRequestPermissionsResult: Permission denied.");
         }
     }
 }

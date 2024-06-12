@@ -28,16 +28,13 @@ public class LifecycleListener implements DefaultLifecycleObserver {
 
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
-        Log.d("LifecycleListener", "onStart");
-        if (!isStarting) {
+        if (!isStarting)
             Toast.makeText(context, "The app was set in the background the: " + dateFormat.format(date), Toast.LENGTH_LONG).show();
-        }
         isStarting = false;
     }
 
     @Override
     public void onStop(@NonNull LifecycleOwner owner) {
-        Log.d("LifecycleListener", "onStop");
         date = new Date();
     }
 }

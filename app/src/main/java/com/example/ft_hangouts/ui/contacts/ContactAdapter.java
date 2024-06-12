@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHolder> {
 
+    private static final String TAG = "ContactAdapter";
     private final Context context;
     private final ArrayList<Contact> contactsListData;
     private final ActivityResultLauncher<Intent> contactPageActivity;
@@ -43,7 +44,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Log.d("onBindViewHolder: ", "Binding contact: " + contactsListData.get(position).getContactId());
+        Log.d(TAG, "Binding contact: " + contactsListData.get(position).getContactId());
 
         String displayedName = contactsListData.get(position).hasName()
                 ? contactsListData.get(position).getFullName() : contactsListData.get(position).getPhoneNumber();
@@ -51,18 +52,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
 
         try {
             Uri uri = contactsListData.get(position).getImageUri();
-            Log.d("onBindViewHolder: ", "Image found: " + uri.toString());
             if (!uri.toString().isEmpty())
                 holder.contact_image.setImageURI(uri);
             else
                 holder.contact_image.setImageResource(R.drawable.default_user);
         } catch (Exception e) {
-            Log.e("onBindViewHolder: ", "No image found");
+            Log.e(TAG, "Error setting image: " + Log.getStackTraceString(e));
             holder.contact_image.setImageResource(R.drawable.default_user);
         }
 
         holder.mainLayout.setOnClickListener(v -> {
-            Log.d("onBindViewHolder: ", "Clicked on contact: " + contactsListData.get(position).getContactId());
+            Log.d(TAG, "Clicked on contact: " + contactsListData.get(position).getContactId());
 
             Intent intent = new Intent(context, ContactPageActivity.class);
             intent.putExtra("id", contactsListData.get(position).getContactId());

@@ -3,7 +3,6 @@ package com.example.ft_hangouts.ui.messages;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import com.example.ft_hangouts.ui.contacts.Contact;
 import java.util.ArrayList;
 
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder> {
-
+    private static final String TAG = "ConversationAdapter";
     Context context;
     ArrayList<ConversationItem> conversationItems;
 
@@ -32,8 +31,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @NonNull
     @Override
     public ConversationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d("onCreateViewHolder: ", "Creating conversation view holder");
-
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.conversation_row, parent, false);
 
@@ -49,7 +46,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         holder.name.setText(displayedName);
 
         Uri uri = contact.getImageUri();
-        Log.d("onBindViewHolder: ", "Image found: " + uri.toString());
         if (!uri.toString().isEmpty())
             holder.contactImage.setImageURI(uri);
         else

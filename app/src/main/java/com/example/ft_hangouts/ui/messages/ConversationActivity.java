@@ -86,7 +86,7 @@ public class ConversationActivity extends AppCompatActivity {
         }
 
         // Setup toolbar
-        CharSequence toolbarTitle = contact.getFullName().isEmpty() ? contact.getPhoneNumber() : contact.getFullName();
+        CharSequence toolbarTitle = contact.hasName() ? contact.getFullName() : contact.getPhoneNumber();
         binding.conversationActivityToolbar.myToolbar.setTitle(toolbarTitle);
         setSupportActionBar(binding.conversationActivityToolbar.myToolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
@@ -152,7 +152,7 @@ public class ConversationActivity extends AppCompatActivity {
         if (requestCode == PERMISSION_REQUEST_SEND_SMS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (sendSms())
-                    Toast.makeText(getApplicationContext(), "SMS sent successfully.", Toast.LENGTH_LONG).show();
+                    Log.i(TAG, "SMS send successfully");
             }
             else
                 Toast.makeText(getApplicationContext(), "No permission to send sms.", Toast.LENGTH_LONG).show();
@@ -161,15 +161,15 @@ public class ConversationActivity extends AppCompatActivity {
 
     //register your activity onResume()
     @Override
-    public void onResume() {
-        super.onResume();
-        registerReceiver(mMessageReceiver, new IntentFilter("smsBroadCast" + contact.getContactId()));
+    public void onStart() {
+        super.onStart();
+        registerReceiver(mMessageReceiver, new IntentFilter("smsBroadCast"));
     }
 
     //Must unregister onPause()
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         unregisterReceiver(mMessageReceiver);
     }
 
@@ -183,10 +183,6 @@ public class ConversationActivity extends AppCompatActivity {
             String message = intent.getStringExtra("message");
             long contactId = intent.getLongExtra("contact_id", -1);
             long timestamp = intent.getLongExtra("timestamp", 0);
-
-            Log.d("receiver", "Got message: " + message);
-            Log.d("receiver", "Got contact_id: " + contactId);
-            Log.d("receiver", "Got timestamp: " + timestamp);
 
             //do other stuff here
             if (contactId == contact.getContactId()) {

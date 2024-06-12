@@ -13,8 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -31,6 +33,8 @@ import java.util.Objects;
 
 public class ContactPageActivity extends AppCompatActivity {
 
+    private static final String TAG = "ContactPageActivity";
+    private static final int PERMISSIONS_REQUEST_CALL_PHONE = 125;
     private ActivityContactPageBinding binding;
     Contact contact;
     TextView contactName;
@@ -63,6 +67,15 @@ public class ContactPageActivity extends AppCompatActivity {
             return insets;
         });
 
+        contact = new Contact(getIntent());
+        if (!contact.isValid()) {
+            Log.e(TAG, "Invalid contact id");
+            Intent intent = new Intent();
+            intent.putExtra("error", true);
+            setResult(RESULT_CANCELED, intent);
+            finish();
+        }
+
         contactImage = binding.contactPageImage;
         contactName = binding.contactPageName;
         phoneNumberText = binding.contactPagePhoneNumber;
@@ -73,14 +86,6 @@ public class ContactPageActivity extends AppCompatActivity {
         messageButton = binding.contactMessageButton;
         callButton = binding.contactCallButton;
 
-        contact = new Contact(getIntent());
-        if (!contact.isValid()) {
-            Log.e("ContactPageActivity", "Invalid contact id");
-            Intent intent = new Intent();
-            intent.putExtra("error", true);
-            setResult(RESULT_CANCELED, intent);
-            finish();
-        }
         setContent();
 
         binding.contactPageEditButton.setOnClickListener(v -> {
@@ -130,11 +135,11 @@ public class ContactPageActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1) {
+        if (requestCode == PERMISSIONS_REQUEST_CALL_PHONE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Permission granted");
                 callAction();
             } else
                 Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
@@ -142,14 +147,7 @@ public class ContactPageActivity extends AppCompatActivity {
     }
 
     public  boolean isPermissionGranted() {
-        if (checkSelfPermission(android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-            Log.v("TAG", "Permission is granted");
-            return true;
-        } else {
-            Log.v("TAG", "Permission is revoked");
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CALL_PHONE}, 1);
-            return false;
-        }
+        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void callAction() {
@@ -192,6 +190,8 @@ public class ContactPageActivity extends AppCompatActivity {
                 callButton.setOnClickListener(v -> {
                     if (isPermissionGranted())
                         callAction();
+                    else
+                        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CALL_PHONE}, PERMISSIONS_REQUEST_CALL_PHONE);
                 });
             }
             else {

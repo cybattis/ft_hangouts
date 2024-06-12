@@ -118,9 +118,9 @@ public class Utils {
         try {
             if (file.exists() && !file.delete())
                 Log.w("RemoveImage", "Failed to delete image");
-            Log.d("RemoveImage", "Deleted image: " + image);
+            Log.i("RemoveImage", "Deleted image: " + image);
         } catch (Exception e) {
-            Log.w("RemoveImage", "Failed to delete image: " + e.getMessage());
+            Log.e("RemoveImage", e.getMessage(), e);
         }
     }
 }

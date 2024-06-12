@@ -39,7 +39,6 @@ public class MessagesFragment extends Fragment {
 
     private void createConversationList() {
         conversationItems = db.getAllConversations();
-        Log.d("createConversationList: ", conversationItems.size() + " conversations found");
         conversationAdapter = new ConversationAdapter(getContext(), conversationItems);
         conversationRV.setAdapter(conversationAdapter);
         conversationRV.setLayoutManager(new LinearLayoutManager(getContext()));
