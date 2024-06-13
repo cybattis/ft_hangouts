@@ -62,23 +62,7 @@ public class ConversationActivity extends AppCompatActivity {
             finish();
         }
 
-        // Fetch messages from database
-        ArrayList<Message> messages = db.getMessages(contact.getContactId());
-        messageAdapter = new MessageAdapter(this, messages, contact);
-
-        // Setup recycler view
-        messagesRV = binding.conversationMessageList;
-        messagesRV.setAdapter(messageAdapter);
-        messagesRV.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        messagesRV.scrollToPosition(messageAdapter.getItemCount() - 1);
-        if (messagesRV.getAdapter() != null && messagesRV.getAdapter().getItemCount() > 0) {
-            messagesRV.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-                if (bottom < oldBottom) {
-                    messagesRV.postDelayed(() -> messagesRV.smoothScrollToPosition(
-                            messagesRV.getAdapter().getItemCount() - 1), 100);
-                }
-            });
-        }
+        ferchMessages();
 
         // Setup toolbar
         CharSequence toolbarTitle = contact.hasName() ? contact.getFullName() : contact.getPhoneNumber();
@@ -96,6 +80,26 @@ public class ConversationActivity extends AppCompatActivity {
         messageInput = binding.inputMessage;
         sendButton = binding.sendMessageButton;
         sendButton.setOnClickListener(v -> sendSms());
+    }
+
+    private void ferchMessages() {
+        // Fetch messages from database
+        ArrayList<Message> messages = db.getMessages(contact.getContactId());
+        messageAdapter = new MessageAdapter(this, messages, contact);
+
+        // Setup recycler view
+        messagesRV = binding.conversationMessageList;
+        messagesRV.setAdapter(messageAdapter);
+        messagesRV.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        messagesRV.scrollToPosition(messageAdapter.getItemCount() - 1);
+        if (messagesRV.getAdapter() != null && messagesRV.getAdapter().getItemCount() > 0) {
+            messagesRV.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                if (bottom < oldBottom) {
+                    messagesRV.postDelayed(() -> messagesRV.smoothScrollToPosition(
+                            messagesRV.getAdapter().getItemCount() - 1), 100);
+                }
+            });
+        }
     }
 
     @Override
@@ -120,9 +124,17 @@ public class ConversationActivity extends AppCompatActivity {
             SmsManager smsManager = SmsManager.getDefault();
             try {
                 Log.d("sendSms: ", "Sending sms to " + contact.getPhoneNumber());
+
+                Message newMessage = new Message(message.get(), new Date().getTime(), true, contact.getContactId());
+                if (!db.addMessage(newMessage)) {
+                    Log.e(TAG, "Failed to add message to database");
+                    throw new Exception("Failed to add message to database");
+                }
+
+                // Send SMS
                 smsManager.sendTextMessage(contact.getPhoneNumber(), null, message.get(), null, null);
-                Message newMessage = new Message(message.get(), 0, new Date().getTime(), true, contact.getContactId());
-                db.addMessage(newMessage);
+
+                // Update UI
                 messageAdapter.addMessage(newMessage);
                 messageAdapter.notifyItemInserted(messageAdapter.getItemCount() - 1);
                 messageInput.setText("");
@@ -164,25 +176,11 @@ public class ConversationActivity extends AppCompatActivity {
         unregisterReceiver(mMessageReceiver);
     }
 
-
     //This is the handler that will manager to process the broadcast intent
     private final BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            // Extract data included in the Intent
-            String message = intent.getStringExtra("message");
-            long contactId = intent.getLongExtra("contact_id", -1);
-            long timestamp = intent.getLongExtra("timestamp", 0);
-
-            //do other stuff here
-            if (contactId == contact.getContactId()) {
-                Message newMessage = new Message(message, timestamp, 0, false, contact.getContactId());
-                db.addMessage(newMessage);
-                messageAdapter.addMessage(newMessage);
-                messageAdapter.notifyItemInserted(messageAdapter.getItemCount() - 1);
-                messagesRV.scrollToPosition(messageAdapter.getItemCount() - 1);
-            }
+            ferchMessages();
         }
     };
 }

@@ -33,7 +33,6 @@ import java.util.Objects;
 public class ContactPageActivity extends AppCompatActivity {
 
     private static final String TAG = "ContactPageActivity";
-    private static final int PERMISSIONS_REQUEST_CALL_PHONE = 125;
     private ActivityContactPageBinding binding;
     Contact contact;
     TextView contactName;

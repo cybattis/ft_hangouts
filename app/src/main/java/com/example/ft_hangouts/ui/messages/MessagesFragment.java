@@ -65,11 +65,6 @@ public class MessagesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
         registerReceiver(requireContext().getApplicationContext(), mMessageReceiver, new IntentFilter("smsBroadCast"), ContextCompat.RECEIVER_NOT_EXPORTED);
     }
 

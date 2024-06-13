@@ -25,7 +25,7 @@ public class LifecycleListener implements DefaultLifecycleObserver {
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
         if (!isStarting)
-            Toast.makeText(context, "The app was set in the background the: " + dateFormat.format(date), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "App set in the background the: " + dateFormat.format(date), Toast.LENGTH_LONG).show();
         isStarting = false;
     }
 
