@@ -25,13 +25,14 @@
     <string name="text_last_message">Dernier message</string>
     <string name="delete_contact_button_text">Supprimer un contact</string>
     <string name="address_icon_text">Logo adresse</string>
-    <string name="delete_contact_confirmation">Supprimer contact</string>
-    <string name="yes">Oui</string>
-    <string name="no">Non</string>
+    <string name="delete_contact_confirmation">Supprimer contact ?</string>
+    <string name="yes_text">Oui</string>
+    <string name="no_text">Non</string>
     <string name="send_text">Envoyer</string>
     <string name="go_to_conversation_text">Aller aux conversations</string>
     <string name="call_contact">Appeler contact</string>
     <string name="message">Message</string>
     <string name="phone_number">Numéro</string>
-    <string name="no_contact">Aucun contact</string>
+    <string name="no_contact">Aucun contacts</string>
+    <string name="no_messages">Aucun messages</string>
 </resources>

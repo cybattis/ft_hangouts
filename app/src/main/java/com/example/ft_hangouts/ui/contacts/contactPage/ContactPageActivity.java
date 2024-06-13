@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -101,6 +102,17 @@ public class ContactPageActivity extends AppCompatActivity {
         });
 
         binding.contactPageDeleteButton.setOnClickListener(v -> {
+            AlertDialog dialog = getAlertDialog();
+            dialog.show();
+        });
+    }
+
+    @NonNull
+    private AlertDialog getAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(R.string.delete_contact_confirmation);
+        builder.setPositiveButton(R.string.yes_text, (dialog, which) -> {
             DatabaseHelper db = new DatabaseHelper(this);
             String imageUri = contact.getImagePath();
 
@@ -115,9 +127,12 @@ public class ContactPageActivity extends AppCompatActivity {
             }
             else
                 setResult(RESULT_CANCELED, intent);
-
             finish();
         });
+        builder.setNegativeButton(R.string.no_text, (dialog, which) -> {
+            dialog.dismiss();
+        });
+        return builder.create();
     }
 
     @Override
@@ -254,4 +269,6 @@ public class ContactPageActivity extends AppCompatActivity {
         else
             PermissionHandler.requestCallPermission(this);
     }
+
+
 }

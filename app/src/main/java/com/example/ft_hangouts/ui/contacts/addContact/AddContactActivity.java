@@ -163,7 +163,7 @@ public class AddContactActivity extends AppCompatActivity {
             contact.setPostalCode(postalCodeEditText.getText().toString().trim());
             contact.setEmail(emailEditText.getText().toString().trim());
 
-            if (!contact.hasName() && !contact.hasPhoneNumber()) {
+            if (!contact.getFirstName().isEmpty() && !contact.getLastName().isEmpty() && !contact.hasPhoneNumber()) {
                 Toast.makeText(getApplicationContext(), "Name or phone number is required", Toast.LENGTH_SHORT).show();
                 return;
             }

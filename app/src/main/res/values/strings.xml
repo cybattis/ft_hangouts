@@ -28,13 +28,14 @@
     <string name="delete_contact_button_text">delete contact</string>s
     <string name="address_icon_text">address icon</string>
     <string name="delete_contact_confirmation">Delete contact ?</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="yes_text">Yes</string>
+    <string name="no_text">No</string>
     <string name="send_text">Send</string>
     <string name="go_to_conversation_text">Go to conversation</string>
     <string name="call_contact">Call contact</string>
     <string name="message">Message</string>
     <string name="phone_number">Phone number</string>
-    <string name="no_contact">No contact</string>
+    <string name="no_contact">No contacts</string>
+    <string name="no_messages">No messages</string>
 
 </resources>

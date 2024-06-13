@@ -144,7 +144,7 @@ public class Contact {
     }
 
     public boolean hasName() {
-        return !firstName.isEmpty() && !lastName.isEmpty();
+        return !firstName.isEmpty() || !lastName.isEmpty();
     }
 
     public String getFullAddress() {

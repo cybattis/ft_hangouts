@@ -45,6 +45,11 @@ public class MessagesFragment extends Fragment {
 
     private void createConversationList() {
         conversationItems = db.getAllConversations();
+        if (conversationItems.isEmpty())
+            binding.noMessagesTextView.setVisibility(View.VISIBLE);
+        else
+            binding.noMessagesTextView.setVisibility(View.GONE);
+
         conversationAdapter = new ConversationAdapter(getContext(), conversationItems);
         conversationRV.setAdapter(conversationAdapter);
         conversationRV.setLayoutManager(new LinearLayoutManager(getContext()));
