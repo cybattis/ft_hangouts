@@ -13,6 +13,8 @@ import com.example.ft_hangouts.permission.PermissionHandler;
 import com.example.ft_hangouts.ui.contacts.Contact;
 import com.example.ft_hangouts.ui.messages.Message;
 
+import java.util.Date;
+
 public class SmsListener extends BroadcastReceiver {
     private static final String TAG = "SmsListener";
 
@@ -34,6 +36,7 @@ public class SmsListener extends BroadcastReceiver {
             Intent conversationIntent = new Intent("smsBroadCast");
             for (SmsMessage smsMessage : Telephony.Sms.Intents.getMessagesFromIntent(intent)) {
                 Log.d(TAG, "Message received: " + smsMessage.getMessageBody());
+                long timestamp = new Date().getTime();
 
                 long contactId = db.getContact(smsMessage.getOriginatingAddress()).getContactId();
                 if (contactId == -1) {
@@ -45,7 +48,7 @@ public class SmsListener extends BroadcastReceiver {
                     contactId = db.addContact(contact);
 
                     // add message
-                    Message message = new Message(smsMessage.getMessageBody(), smsMessage.getTimestampMillis(), false, contactId);
+                    Message message = new Message(smsMessage.getMessageBody(), timestamp, false, contactId);
                     if (!db.addMessage(message)) {
                         Log.e(TAG, "Failed to add message to database");
                         return ;
@@ -57,7 +60,7 @@ public class SmsListener extends BroadcastReceiver {
                 else {
                     Log.d(TAG, "Contact found for phone number: " + smsMessage.getOriginatingAddress() + ", broadcasting message");
 
-                    Message message = new Message(smsMessage.getMessageBody(), smsMessage.getTimestampMillis(), false, contactId);
+                    Message message = new Message(smsMessage.getMessageBody(), timestamp, false, contactId);
                     if (!db.addMessage(message)) {
                         Log.e(TAG, "Failed to add message to database");
                         return;
@@ -65,7 +68,7 @@ public class SmsListener extends BroadcastReceiver {
 
                     conversationIntent.putExtra("message", smsMessage.getMessageBody());
                     conversationIntent.putExtra("contact_id", contactId);
-                    conversationIntent.putExtra("timestamp", smsMessage.getTimestampMillis());
+                    conversationIntent.putExtra("timestamp", timestamp);
                     context.sendBroadcast(conversationIntent);
                 }
             }
