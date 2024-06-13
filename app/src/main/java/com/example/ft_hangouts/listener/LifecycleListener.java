@@ -1,17 +1,13 @@
 package com.example.ft_hangouts.listener;
 
-import static java.security.AccessController.getContext;
-
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
 
-import java.sql.Time;
 import java.util.Date;
 import java.util.Locale;
 

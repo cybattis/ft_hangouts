@@ -25,7 +25,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ft_hangouts.database.DatabaseHelper;
 import com.example.ft_hangouts.databinding.FragmentContactsBinding;
 import com.example.ft_hangouts.ui.contacts.addContact.AddContactActivity;
-import com.example.ft_hangouts.ui.messages.Message;
 
 import java.util.ArrayList;
 
