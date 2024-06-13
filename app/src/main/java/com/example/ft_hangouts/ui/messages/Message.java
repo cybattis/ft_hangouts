@@ -1,7 +1,6 @@
 package com.example.ft_hangouts.ui.messages;
 
 import android.database.Cursor;
-import android.telephony.SmsMessage;
 
 import java.util.Date;
 
